@@ -7,3 +7,4 @@ Version3
 Version4
 Version5
 Version6
+fix issue 7 which need cherry-pick by dev branch
