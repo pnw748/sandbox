@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('p4m update') {
       steps {
-        sh 'p4m update'
+        sh 'echo "P4m"'
       }
     }
     stage('Linux platform build and test') {
