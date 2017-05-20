@@ -13,7 +13,7 @@ pipeline {
 export P4USER=jenkins
 export P4PORT=10.1.4.60:1666
 export P4CLIENT=jenkins_mrec_ws
-/usr/bin/p4 clean'''
+#/usr/bin/p4 clean'''
       }
     }
     stage('Sync Code') {
@@ -22,7 +22,7 @@ export P4CLIENT=jenkins_mrec_ws
         sh '''export P4USER=jenkins
 export P4PORT=10.1.4.60:1666
 export P4CLIENT=jenkins_mrec_ws
-/usr/bin/p4 sync'''
+#/usr/bin/p4 sync'''
       }
     }
     stage('Build ilgli') {
@@ -32,9 +32,18 @@ export P4CLIENT=jenkins_mrec_ws
           sh '''pwd
 echo $PATH
 export PLATFORM=UNIX
-make COMPDIR=ilgli'''
+#make COMPDIR=ilgli'''
         }
         
+      }
+    }
+    stage('Test') {
+      steps {
+        sh '''pwd
+echo $PATH
+export PLATFORM=UNIX
+make COMPDIR=ilgli all
+make COMPDIR=ilglq qnative'''
       }
     }
   }
