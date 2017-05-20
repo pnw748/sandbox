@@ -28,7 +28,7 @@ export P4CLIENT=jenkins_mrec_ws
     stage('Build ilgli') {
       steps {
         echo 'Start Build ilgli ...'
-        dir(path: '$DEPOT_ROOT/depot/MREC/main') {
+        dir(path: '/automotive/projects/shanghai_tmp/depot/MREC/main') {
           sh '''pwd
 echo $PATH
 export PLATFORM=UNIX
