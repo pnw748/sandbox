@@ -1,47 +1,24 @@
 pipeline {
-  agent any
+  agent {
+    node {
+      label 'unv-shanghai-fu.nrc1.us.grid.nuance.com'
+    }
+    
+  }
   stages {
-    stage('p4m update') {
+    stage('Clean ENV') {
       steps {
-        sh 'echo "P4m"'
+        echo 'Start cleanup ...'
+        sh '''cd "$DEPOT_ROOT"
+export P4USER=jenkins
+export P4PORT=10.1.4.60:1666
+export P4CLIENT=jenkins_mrec_ws
+pwd
+#/usr/bin/p4 clean'''
       }
     }
-    stage('Linux platform build and test') {
-      steps {
-        parallel(
-          "Linux platform build and test": {
-            echo 'test'
-            
-          },
-          "Windows platform build and test": {
-            echo 'Windows'
-            
-          },
-          "Mac platform build and test": {
-            echo 'Mac'
-            
-          },
-          "Android platform build and test": {
-            echo 'Android'
-            
-          }
-        )
-      }
-    }
-    stage('Archive output') {
-      steps {
-        echo 'arhive'
-      }
-    }
-    stage('Sync to Grid') {
-      steps {
-        echo 'sync code'
-      }
-    }
-    stage('Release') {
-      steps {
-        echo 'release'
-      }
-    }
+  }
+  environment {
+    DEPOT_ROOT = '/automotive/projects/shanghai_tmp'
   }
 }
