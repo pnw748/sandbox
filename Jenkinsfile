@@ -39,11 +39,14 @@ export PLATFORM=UNIX
     }
     stage('Test') {
       steps {
-        sh '''pwd
+        dir(path: '/automotive/projects/shanghai_tmp/depot/MREC/main/test') {
+          sh '''pwd
 echo $PATH
 export PLATFORM=UNIX
 make COMPDIR=ilgli all
 make COMPDIR=ilglq qnative'''
+        }
+        
       }
     }
   }
