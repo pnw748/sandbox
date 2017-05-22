@@ -45,7 +45,18 @@ make COMPDIR=ilgli'''
               sh '''pwd
 echo $PATH
 export PLATFORM=UNIX
-make COMPDIR=ilgli'''
+make COMPDIR=ilglc'''
+            }
+            
+            
+          },
+          "Build optimized debug Linux 64bit": {
+            echo 'Start build Build crosscheck Linux 64bit'
+            dir(path: '/automotive/projects/shanghai_tmp/depot/MREC/main') {
+              sh '''pwd
+echo $PATH
+export PLATFORM=UNIX
+make COMPDIR=ilglg'''
             }
             
             
