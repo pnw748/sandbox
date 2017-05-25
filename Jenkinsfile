@@ -25,13 +25,14 @@ export P4TRUST=.../p4trust
           },
           "Build Windowns": {
             echo 'Start build Windows platform ...'
-            bat(script: 'type', returnStatus: true, returnStdout: true)
             
           },
           "Mac": {
             catchError() {
               sh '''# type your build command here
-echo "xxx"'''
+echo "xxx"
+
+xffw'''
             }
             
             
