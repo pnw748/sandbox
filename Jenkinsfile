@@ -20,11 +20,20 @@ export P4TRUST=.../p4trust
         parallel(
           "Build Linux": {
             echo 'Start build Linux platform ...'
+            sh 'echo "type your build command here"'
             
           },
           "Build Windowns": {
             echo 'Start build Windows platform ...'
-            readTrusted 'p4trust'
+            bat(script: 'type', returnStatus: true, returnStdout: true)
+            
+          },
+          "Mac": {
+            catchError() {
+              sh '''# type your build command here
+echo "xxx"'''
+            }
+            
             
           }
         )
