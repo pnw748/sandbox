@@ -20,21 +20,24 @@ export P4TRUST=.../p4trust
         parallel(
           "Build Linux": {
             echo 'Start build Linux platform ...'
-            sh 'echo "type your build command here"'
+            node(label: 'master') {
+              sh 'echo "Build..."'
+            }
+            
             
           },
           "Build Windowns": {
             echo 'Start build Windows platform ...'
-            
-          },
-          "Mac": {
-            catchError() {
-              sh '''# type your build command here
-echo "xxx"
-
-xffw'''
+            node(label: 'master') {
+              sh 'echo "Build ..."'
             }
             
+            
+          },
+          "build Mac": {
+            echo 'Start build Mac platform ...'
+            node(label: 'master')
+            sh 'echo "Build ..."'
             
           }
         )
