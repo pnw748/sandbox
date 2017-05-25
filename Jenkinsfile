@@ -1,7 +1,7 @@
 pipeline {
   agent {
     node {
-      label 'unv-shanghai-fu.nrc1.us.grid.nuance.com'
+      label 'master'
     }
     
   }
@@ -9,10 +9,29 @@ pipeline {
     stage('Sync Code') {
       steps {
         echo 'Start sync code from Perforce server'
+        sh '''export P4USER=your_name
+export P4TICKETS=.../p4tickets
+export P4TRUST=.../p4trust
+# p4 sync'''
+      }
+    }
+    stage('Build') {
+      steps {
+        parallel(
+          "Build Linux": {
+            echo 'Start build Linux platform ...'
+            
+          },
+          "Build Windowns": {
+            echo 'Start build Windows platform ...'
+            readTrusted 'p4trust'
+            
+          }
+        )
       }
     }
   }
   environment {
-    DEPOT_ROOT = '/automotive/projects/shanghai_tmp'
+    PARAMETER = 'Value'
   }
 }
