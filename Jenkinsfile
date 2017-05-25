@@ -36,8 +36,10 @@ export P4TRUST=.../p4trust
           },
           "build Mac": {
             echo 'Start build Mac platform ...'
-            node(label: 'master')
-            sh 'echo "Build ..."'
+            node(label: 'master') {
+              sh 'echo "Build ..."'
+            }
+            
             
           }
         )
