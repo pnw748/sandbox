@@ -55,7 +55,6 @@ export P4TRUST=.../p4trust
     stage('Testing') {
       steps {
         echo 'Start testing ...'
-        mail(subject: 'Email test Subject', body: 'Email test Body $PARAMETER', to: 'shanghai_fu@nuance.com')
       }
     }
     stage('Release') {
@@ -90,6 +89,7 @@ export P4TRUST=.../p4trust
           },
           "Send email": {
             echo 'send email'
+            emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) failed', body: 'Please login in ${JENKINS_URL} first, \n and then go to this url to get more information  ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline', attachLog: true, to: 'shanghai.fu@nuance.com')
             
           },
           "Close Fogbugz cases": {
