@@ -32,6 +32,7 @@ export P4TRUST=.../p4trust
               sh 'echo "Build ..."'
             }
             
+            bat(script: 'test', returnStatus: true, returnStdout: true)
             
           },
           "build Mac": {
