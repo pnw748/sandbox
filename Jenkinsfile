@@ -29,8 +29,7 @@ export P4TRUST=.../p4trust
           "Build Windowns": {
             echo 'Start build Windows platform ...'
             node(label: 'master') {
-              sh '''echo "Build ..."
-cat test.txt'''
+              sh 'echo "Build ..."'
             }
             
             
