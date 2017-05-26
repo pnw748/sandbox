@@ -57,6 +57,14 @@ cat test.txt'''
         echo 'Start release ...'
       }
     }
+    stage('Build Documents') {
+      steps {
+        dir(path: '.') {
+          sh 'echo "Start build document ..."'
+        }
+        
+      }
+    }
   }
   environment {
     PARAMETER = 'Value'
