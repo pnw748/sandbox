@@ -70,19 +70,18 @@ export P4TRUST=.../p4trust
   }
   post {
     always {
-      echo 'I will always say Hello again! ${params.PARAMETER}'
-      echo "== ${params.PARAMETER} =="
-      echo "== ${PARAMETER} =="
+      echo 'I will always say Hello, the PARAMETER value is 1== ${PARAMETER} =='
+      echo "I will always say Hello, the PARAMETER value is 2== ${PARAMETER} =="
       
     }
     
     failure {
-      echo 'Current CI failed! ${params.PARAMETER}'
+      echo 'Current CI failed!'
       
     }
     
     success {
-      echo 'Current CI is successfule! ${params.PARAMETER}'
+      echo 'Current CI is successfule!'
       
     }
     
