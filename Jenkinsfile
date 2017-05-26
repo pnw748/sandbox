@@ -3,6 +3,10 @@ pipeline {
     node {
       label 'master'
     }
+
+  environment {
+    PARAMETER = 'Value'
+  }
     
   }
   stages {
@@ -46,7 +50,10 @@ export P4TRUST=.../p4trust
       }
     }
   }
-  environment {
-    PARAMETER = 'Value'
+
+  post { 
+        always { 
+            echo 'I will always say Hello again!'
+        }
   }
 }
