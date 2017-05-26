@@ -89,7 +89,6 @@ export P4TRUST=.../p4trust
           },
           "Send email": {
             echo 'send email'
-            emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) failed', body: 'Please login in ${JENKINS_URL} first, \n and then go to this url to get more information  ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline', attachLog: true, to: 'shanghai.fu@nuance.com')
             
           },
           "Close Fogbugz cases": {
@@ -105,18 +104,18 @@ export P4TRUST=.../p4trust
   }
   post {
     always {
-      echo 'I will always say Hello, the PARAMETER value is 1== ${PARAMETER} =='
-      echo "I will always say Hello, the PARAMETER value is 2== ${PARAMETER} =="
+      echo "Print this message regardless of the completion status of the Pipeline run."
       
     }
     
     failure {
-      echo 'Current CI failed!'
+      echo 'Print this message if the current Pipeline has a "failed" status'
+      emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) failed', body: 'Please login in ${JENKINS_URL} first, \n and then go to this url to get more information  ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline', attachLog: true, to: 'shanghai.fu@nuance.com')
       
     }
     
     success {
-      echo 'Current CI is successfule!'
+      echo 'Print this message if the current Pipeline has a "success" status'
       
     }
     
