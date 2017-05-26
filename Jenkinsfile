@@ -64,6 +64,7 @@ export P4TRUST=.../p4trust
     always {
       echo 'I will always say Hello again! ${params.PARAMETER}'
       echo "== ${params.PARAMETER} =="
+      echo "== ${PARAMETER} =="
       
     }
     
