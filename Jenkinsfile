@@ -51,6 +51,11 @@ export P4TRUST=.../p4trust
         mail(subject: 'Email test Subject', body: 'Email test Body $PARAMETER', to: 'shanghai_fu@nuance.com')
       }
     }
+    stage('Release') {
+      steps {
+        echo 'Start release ...'
+      }
+    }
   }
   environment {
     PARAMETER = 'Value'
@@ -59,12 +64,17 @@ export P4TRUST=.../p4trust
     always {
       echo 'I will always say Hello again! ${params.PARAMETER}'
       echo "== ${params.PARAMETER} =="
+      
     }
+    
     failure {
       echo 'Current CI failed! ${params.PARAMETER}'
+      
     }
+    
     success {
       echo 'Current CI is successfule! ${params.PARAMETER}'
+      
     }
     
   }
