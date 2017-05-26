@@ -41,6 +41,13 @@ export P4TRUST=.../p4trust
             }
             
             
+          },
+          "Build Android": {
+            node(label: 'master') {
+              echo 'Start  build Android platform'
+            }
+            
+            
           }
         )
       }
