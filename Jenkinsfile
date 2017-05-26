@@ -48,6 +48,7 @@ export P4TRUST=.../p4trust
     stage('Testing') {
       steps {
         echo 'Start testing ...'
+        mail(subject: 'Email test Subject', body: 'Email test Body $PARAMETER', to: 'shanghai_fu@nuance.com')
       }
     }
   }
