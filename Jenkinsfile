@@ -3,12 +3,8 @@ pipeline {
     node {
       label 'master'
     }
+    
   }
-  
-  environment {
-    PARAMETER = 'Value'
-  }
-  
   stages {
     stage('Sync Code') {
       steps {
@@ -49,11 +45,20 @@ export P4TRUST=.../p4trust
         )
       }
     }
+    stage('Testing') {
+      steps {
+        echo 'Start testing ...'
+      }
+    }
   }
-
-  post { 
-        always { 
-            echo 'I will always say Hello again!'
-        }
+  environment {
+    PARAMETER = 'Value'
+  }
+  post {
+    always {
+      echo 'I will always say Hello again!'
+      
+    }
+    
   }
 }
