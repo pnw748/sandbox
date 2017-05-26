@@ -3,12 +3,12 @@ pipeline {
     node {
       label 'master'
     }
-
+  }
+  
   environment {
     PARAMETER = 'Value'
   }
-    
-  }
+  
   stages {
     stage('Sync Code') {
       steps {
