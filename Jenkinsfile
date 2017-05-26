@@ -64,6 +64,34 @@ export P4TRUST=.../p4trust
         
       }
     }
+    stage('Generate release notes') {
+      steps {
+        sh 'echo "Start generate release notes ..."'
+      }
+    }
+    stage('Build and sync image') {
+      steps {
+        sh 'echo "Start release image ..."'
+      }
+    }
+    stage('Publish release notes') {
+      steps {
+        parallel(
+          "Publish release notes": {
+            echo 'Publish release notes'
+            
+          },
+          "Send email": {
+            echo 'send email'
+            
+          },
+          "Close Fogbugz cases": {
+            echo 'Close Fogbugz cases'
+            
+          }
+        )
+      }
+    }
   }
   environment {
     PARAMETER = 'Value'
