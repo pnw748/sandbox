@@ -13,6 +13,7 @@ pipeline {
 export P4TICKETS=.../p4tickets
 export P4TRUST=.../p4trust
 # p4 sync'''
+        p4sync(credential: '0f2b0c8e-06fc-4f6e-afec-5191d03171ce', depotPath: '//depot/...')
       }
     }
     stage('Build') {
@@ -104,13 +105,14 @@ export P4TRUST=.../p4trust
   }
   post {
     always {
-      echo "Print this message regardless of the completion status of the Pipeline run."
+      echo 'Print this message regardless of the completion status of the Pipeline run.'
       
     }
     
     failure {
       echo 'Print this message if the current Pipeline has a "failed" status'
-      emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) failed', body: 'Please login in ${JENKINS_URL} first, \n and then go to this url to get more information  ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline', attachLog: true, to: 'shanghai.fu@nuance.com')
+      emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) failed', body: '''Please login in ${JENKINS_URL} first, 
+ and then go to this url to get more information  ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: 'shanghai.fu@nuance.com')
       
     }
     
