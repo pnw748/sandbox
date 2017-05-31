@@ -9,7 +9,7 @@ pipeline {
     stage('Sync Code') {
       steps {
         echo 'Start sync code from Perforce server'
-        p4sync(credential: '0f2b0c8e-06fc-4f6e-afec-5191d03171ce', depotPath: '//depot/...', workspace: 'customer_ws')
+        p4sync(credential: '0f2b0c8e-06fc-4f6e-afec-5191d03171ce', depotPath: '//depot/...')
       }
     }
     stage('Build') {
