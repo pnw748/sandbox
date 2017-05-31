@@ -13,7 +13,6 @@ pipeline {
 export P4TICKETS=.../p4tickets
 export P4TRUST=.../p4trust
 # p4 sync'''
-        p4sync(credential: '0f2b0c8e-06fc-4f6e-afec-5191d03171ce', depotPath: '//depot/...')
       }
     }
     stage('Build') {
