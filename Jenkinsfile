@@ -60,6 +60,7 @@ pipeline {
     stage('Release') {
       steps {
         echo 'Start release ...'
+        input 'Continue to do Release?'
       }
     }
     stage('Build Documents') {
