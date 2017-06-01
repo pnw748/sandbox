@@ -47,10 +47,7 @@ pipeline {
               echo 'Start  build Android platform'
             }
             
-            catchError() {
-              sh 'might filed'
-            }
-            
+            error 'Android build failed'
             
           }
         )
