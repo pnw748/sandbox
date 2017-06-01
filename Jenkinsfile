@@ -49,8 +49,8 @@ pipeline {
                   sh 'might failed'
               } catch (err) {
                   echo "Failed: ${err}"
-                  #currentBuild.result = 'FAILURE'
-                  #error 'Android build failed'
+                  //currentBuild.result = 'FAILURE'
+                  //error 'Android build failed'
               }
             }
             
