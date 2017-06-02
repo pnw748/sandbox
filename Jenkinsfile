@@ -44,16 +44,7 @@ pipeline {
           },
           "Build Android": {
             node(label: 'master') {
-              //echo 'Start  build Android platform'            
-              try {
-                  sh 'might fail'
-                  echo 'Succeeded!'
-              } catch (err) {
-                  echo "Failed: ${err}"
-              } finally {
-                  sh 'pwd'
-              }
-              echo 'Printed whether above succeeded or failed.'
+              echo 'Start  build Android platform'
             }
             
           }
