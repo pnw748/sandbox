@@ -41,6 +41,7 @@ pipeline {
               sh 'echo "Build ..."'
             }
             
+            sh 'forcefailed'
             
           },
           "Build Android": {
@@ -49,7 +50,6 @@ pipeline {
               sh 'echo "Build ..."'
             }
             
-            error 'build Android failed'
             
           }
         )
