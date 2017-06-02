@@ -43,12 +43,11 @@ pipeline {
             
           },
           "Build Android": {
-            node(label: 'master') {
-              echo 'Start  build Android platform'
-            }
-            
             catchError() {
-              sh 'ls'
+              node(label: 'master') {
+                sh 'pwd'
+              }
+              
             }
             
             
