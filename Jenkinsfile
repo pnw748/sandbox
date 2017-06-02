@@ -43,12 +43,18 @@ pipeline {
             
           },
           "Build Android": {
-            catchError() {
+            try {
               node(label: 'master') {
-                sh 'pwd'
+                sh 'might failed'
               }
-              
+            } catch (err) {
+                echo "Failed: ${err}"
+                //currentBuild.result = 'FAILURE'
+            } finally {
+                echo 'Printed whether above succeeded or failed.'
             }
+            //catchError() { 
+            //}
             
             
           }
