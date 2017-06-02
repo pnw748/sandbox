@@ -24,6 +24,7 @@ pipeline {
               sh 'echo "Build..."'
             }
             
+            sleep 60
             
           },
           "Build Windowns": {
@@ -48,6 +49,7 @@ pipeline {
               sh 'echo "Build ..."'
             }
             
+            error 'build Android failed'
             
           }
         )
