@@ -46,16 +46,16 @@ pipeline {
           "Build Android": {
             echo 'Start build Andro platform ...'
             node(label: 'master') {
-              steps {
                   try {
-                      sh 'forcefailed'
+                    steps {
+                      sh 'whoami'
+                    }
                   } catch (err) {
                       echo "Failed: ${err}"
                       //currentBuild.result = 'FAILURE'
                   } finally {
                       echo 'Printed whether above succeeded or failed.'
                   }
-              }
             }
           },
           failFast: true
