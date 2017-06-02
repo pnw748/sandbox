@@ -51,7 +51,8 @@ pipeline {
             }
             
             
-          }
+          },
+          failFast: true
         )
       }
     }
