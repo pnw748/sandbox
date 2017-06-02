@@ -48,6 +48,10 @@ pipeline {
             echo 'Start build Andro platform ...'
             node(label: 'master') {
               sh 'echo "Build ..."'
+              catchError() {
+                sh 'pwd'
+              }
+              
             }
             
             
