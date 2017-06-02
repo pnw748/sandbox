@@ -41,7 +41,6 @@ pipeline {
               sh 'echo "Build ..."'
             }
             
-            sh 'forcefailed'
             
           },
           "Build Android": {
