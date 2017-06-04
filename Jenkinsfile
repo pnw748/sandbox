@@ -19,7 +19,7 @@ pipeline {
       steps {
         parallel(
           node('master') {
-            "firstTask" : {
+            "firstTask": {
                 try {
                       sh 'whoami'
                   } catch (err) {
@@ -30,7 +30,7 @@ pipeline {
            },
 
           node('master') { //or some other slave name
-            "secondTask" : {
+            "secondTask": {
                 sleep 60
             }
            },
