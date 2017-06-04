@@ -18,46 +18,22 @@ pipeline {
     stage('Build') {
       steps {
         parallel(
-          "Build Linux": {
-            echo 'Start build Linux platform ...'
-            node(label: 'master') {
-              sh 'echo "Build..."'
-            }
-            
-            sleep 60
-            
-          },
-          "Build Windowns": {
-            echo 'Start build Windows platform ...'
-            node(label: 'master') {
-              sh 'echo "Build ..."'
-            }
-            
-            
-          },
-          "build Mac": {
-            echo 'Start build Mac platform ...'
-            node(label: 'master') {
-              sh 'echo "Build ..."'
-            }
-            
-            
-          },
-          "Build Android": {
-            echo 'Start build Andro platform ...'
-            node(label: 'master') {
-                  try {
-                    steps {
+          node('master') {
+            "firstTask" : {
+                try {
                       sh 'whoami'
-                    }
                   } catch (err) {
                       echo "Failed: ${err}"
                       //currentBuild.result = 'FAILURE'
-                  } finally {
-                      echo 'Printed whether above succeeded or failed.'
                   }
             }
-          },
+           },
+
+          node('master') { //or some other slave name
+            "secondTask" : {
+                sleep 60
+            }
+           },
           failFast: true
         )
       }
