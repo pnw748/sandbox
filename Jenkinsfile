@@ -18,7 +18,7 @@ pipeline {
     stage('Build') {
       steps {
         parallel(
-          node('master') {
+          node('master'){
             "firstTask": {
                 try {
                       sh 'whoami'
@@ -29,7 +29,7 @@ pipeline {
             }
            },
 
-          node('master') { //or some other slave name
+          node('master'){
             "secondTask": {
                 sleep 60
             }
