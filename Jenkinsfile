@@ -9,31 +9,43 @@ pipeline {
     stage('Sync Code') {
       steps {
         echo 'Start sync code from Perforce server'
-        ws(dir: '/home/shanghai_fu/jks_slave/workspace/customer_ws') {
-          p4sync(credential: '0f2b0c8e-06fc-4f6e-afec-5191d03171ce', depotPath: '//depot/...')
-        }
-        
+        p4sync(credential: '0f2b0c8e-06fc-4f6e-afec-5191d03171ce', depotPath: '//depot/...')
       }
     }
     stage('Build') {
       steps {
         parallel(
-          node('master'){
-            "firstTask": {
-                try {
-                      sh 'whoami'
-                  } catch (err) {
-                      echo "Failed: ${err}"
-                      //currentBuild.result = 'FAILURE'
-                  }
+          "Build Linux": {
+            echo 'Start build Linux platform ...'
+            node(label: 'master') {
+              sh 'echo "Build..."'
             }
-           },
-
-          node('master'){
-            "secondTask": {
-                sleep 60
+            
+            
+          },
+          "Build Windowns": {
+            echo 'Start build Windows platform ...'
+            node(label: 'master') {
+              sh 'echo "Build ..."'
             }
-           },
+            
+            
+          },
+          "build Mac": {
+            echo 'Start build Mac platform ...'
+            node(label: 'master') {
+              sh 'echo "Build ..."'
+            }
+            
+            
+          },
+          "Build Android": {
+            node(label: 'master') {
+              echo 'Start  build Android platform'
+            }
+            
+            
+          },
           failFast: true
         )
       }
@@ -46,7 +58,6 @@ pipeline {
     stage('Release') {
       steps {
         echo 'Start release ...'
-        input 'Continue to do Release?'
       }
     }
     stage('Build Documents') {
