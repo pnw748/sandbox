@@ -1,7 +1,8 @@
 pipeline {
   agent {
     node {
-      label 'unv-shanghai-fu.nrc1.us.grid.nuance.com'
+      // Define the default node for all stages
+      label 'unv-shanghai-fu.nrc1.us.grid.nuance.com' 
     }
     
   }
@@ -9,14 +10,19 @@ pipeline {
     stage('Sync Code') {
       steps {
         echo 'Start sync code from Perforce server'
-        p4sync(credential: '0f2b0c8e-06fc-4f6e-afec-5191d03171ce', depotPath: '//depot/...')
+        // Defin the custom workspace to sync code, all codes will store in this directory.
+        ws(dir: '/home/shanghai_fu/jks_slave/workspace/customer_ws') {
+          p4sync(credential: '0f2b0c8e-06fc-4f6e-afec-5191d03171ce', depotPath: '//depot/...')
+        }
       }
     }
     stage('Build') {
       steps {
+        // Build all platforms in parallel
         parallel(
           "Build Linux": {
             echo 'Start build Linux platform ...'
+            // Restirct build Linux plftform on special node.
             node(label: 'master') {
               sh 'echo "Build..."'
             }
@@ -46,6 +52,9 @@ pipeline {
             
             
           },
+          // Add this 'failFast' property to enable fail fast, for example: 
+          // if this value is 'true', any one of platform failed will terminate other platform build.
+          // if this value is 'false' (or not set this property), the pipeline will faild until all other platforms completed.
           failFast: true
         )
       }
@@ -62,7 +71,8 @@ pipeline {
     }
     stage('Build Documents') {
       steps {
-        dir(path: '.') {
+        // Switch this path and then run command
+        dir(path: '/home/shanghai_fu/jks_slave/workspace/customer_ws') {
           sh 'echo "Start build document ..."'
         }
         
@@ -100,6 +110,8 @@ pipeline {
   environment {
     PARAMETER = 'Value'
   }
+  
+  // Define post actions after Pipeline completed regardless it's failed or success.
   post {
     always {
       echo 'Print this message regardless of the completion status of the Pipeline run.'
