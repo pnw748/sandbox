@@ -2,18 +2,19 @@ pipeline {
   agent {
     node {
       // Define the default node for all stages
-      label 'unv-shanghai-fu.nrc1.us.grid.nuance.com' 
+      label 'master'
     }
     
   }
   stages {
     stage('Sync Code') {
       steps {
-        echo 'Start sync code from Perforce server'
-        // Defin the custom workspace to sync code, all codes will store in this directory.
-        ws(dir: '/home/shanghai_fu/jks_slave/workspace/customer_ws') {
-          p4sync(credential: '0f2b0c8e-06fc-4f6e-afec-5191d03171ce', depotPath: '//depot/...')
+        // Define the custom workspace to sync code, all codes will store in this directory.
+        ws(dir: '.') {
+          echo 'Start sync code'
+          //p4sync(credential: '0f2b0c8e-06fc-4f6e-afec-5191d03171ce', depotPath: '//depot/...')
         }
+        
       }
     }
     stage('Build') {
@@ -22,25 +23,9 @@ pipeline {
         parallel(
           "Build Linux": {
             echo 'Start build Linux platform ...'
-            // Restirct build Linux plftform on special node.
             node(label: 'master') {
               sh 'echo "Build..."'
-            }
-            
-            
-          },
-          "Build Windowns": {
-            echo 'Start build Windows platform ...'
-            node(label: 'master') {
-              sh 'echo "Build ..."'
-            }
-            
-            
-          },
-          "build Mac": {
-            echo 'Start build Mac platform ...'
-            node(label: 'master') {
-              sh 'echo "Build ..."'
+              sleep 30
             }
             
             
@@ -48,6 +33,29 @@ pipeline {
           "Build Android": {
             node(label: 'master') {
               echo 'Start  build Android platform'
+            }
+            
+            
+          },
+          "Build Windows": {
+            // Restirct build plftform on special node.
+            node(label: 'TextProc-bn-lm-nl7.nuance.com') {
+              script {
+                try {
+                  bat 'dir'
+                } catch (err) {
+                  echo "Failed: ${err}"
+                  // comment below line, if you want to ignore the error in 'try' section 
+                  error "Failed information: ${err}"
+                } finally {
+                  echo 'Printed whether above succeeded or failed.'
+                }
+                echo 'print in script section'
+                //dir(path: '/home/shanghai_fu/jks_node/workspace/customer_ws') {
+                //  sh 'echo "Start build Windows"'
+                //}
+              }
+              
             }
             
             
@@ -61,7 +69,19 @@ pipeline {
     }
     stage('Testing') {
       steps {
-        echo 'Start testing ...'
+        parallel(
+          "Unit Test": {
+            echo 'Start testing ...'
+            
+          },
+          "Regression Test": {
+            timeout(time: 30, unit: 'MINUTES') {
+              sh 'echo "do test"'
+            }
+            
+            
+          }
+        )
       }
     }
     stage('Release') {
@@ -69,49 +89,24 @@ pipeline {
         echo 'Start release ...'
       }
     }
-    stage('Build Documents') {
+    stage('Post Action') {
       steps {
         // Switch this path and then run command
-        dir(path: '/home/shanghai_fu/jks_slave/workspace/customer_ws') {
+        dir(path: '.') {
           sh 'echo "Start build document ..."'
         }
         
-      }
-    }
-    stage('Generate release notes') {
-      steps {
-        sh 'echo "Start generate release notes ..."'
-      }
-    }
-    stage('Build and sync image') {
-      steps {
-        sh 'echo "Start release image ..."'
-      }
-    }
-    stage('Publish release notes') {
-      steps {
-        parallel(
-          "Publish release notes": {
-            echo 'Publish release notes'
-            
-          },
-          "Send email": {
-            echo 'send email'
-            
-          },
-          "Close Fogbugz cases": {
-            echo 'Close Fogbugz cases'
-            
-          }
-        )
+        // re-try below command three times  
+        retry(count: 3) {
+          echo 'Run this command three times'
+        }
+        
       }
     }
   }
   environment {
     PARAMETER = 'Value'
   }
-  
-  // Define post actions after Pipeline completed regardless it's failed or success.
   post {
     always {
       echo 'Print this message regardless of the completion status of the Pipeline run.'
