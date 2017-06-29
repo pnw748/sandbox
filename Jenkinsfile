@@ -36,17 +36,18 @@ pipeline {
           def training_str= props['TRAINING_LIST']
           echo "training_str=${training_str}"
 
-          def trainings = [:]
+          //def trainings = [:]
 
           def training_array=training_str.split(",")
           for(item in training_array){  
-              trainings["${item}"] = {
-                node('master') {
-                  echo "Starting training ${item} ..."
-                }
+              //trainings["${item}"] = {
+              //  node('master') {
+              //    echo "Starting training ${item} ..."
+              //  }
+              println item
               }
           }
-          parallel trainings
+          //parallel trainings
         }
       }
     }
