@@ -60,7 +60,7 @@ pipeline {
           echo "Var3=${Var3}"
 
           //def labels = ['master', 'master']
-          def labels = [${Var3}]
+          def labels = ${Var3}
           for (x in labels) {
             def label = x
             echo label
