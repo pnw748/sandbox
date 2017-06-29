@@ -2,11 +2,6 @@ pipeline {
   agent {
     node {
       label 'master'
-        //def props = readProperties  file:'parameters.conf'
-        //def Var1= props['PARA_A']
-        //def Var2= props['PARA_B']
-        //echo "Var1=${Var1}"
-        //echo "Var2=${Var2}"
     }
     
   }
@@ -56,6 +51,12 @@ pipeline {
       steps {
         echo 'Start label'
         script {
+          def props = readProperties  file:'parameters.conf'
+          def Var1= props['PARA_A']
+          def Var2= props['PARA_B']
+          echo "Var1=${Var1}"
+          echo "Var2=${Var2}"
+
           def branches = [:]
           for (int i = 0; i < 4; i++) {
               def index = i
