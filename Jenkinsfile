@@ -1,117 +1,53 @@
 pipeline {
   agent {
     node {
-      // Define the default node for all stages
-      label 'unv-shanghai-fu.nrc1.us.grid.nuance.com' 
+      label 'master'
     }
     
   }
   stages {
-    stage('Sync Code') {
+    stage('Get ASTRA-Project-tools ') {
       steps {
-        echo 'Start sync code from Perforce server'
-        // Defin the custom workspace to sync code, all codes will store in this directory.
-        ws(dir: '/home/shanghai_fu/jks_slave/workspace/customer_ws') {
-          p4sync(credential: '0f2b0c8e-06fc-4f6e-afec-5191d03171ce', depotPath: '//depot/...')
-        }
+        echo 'Get ASTRA-Project-tools from Perforce'
       }
     }
-    stage('Build') {
+    stage('Sync ASTRA code') {
       steps {
-        // Build all platforms in parallel
-        parallel(
-          "Build Linux": {
-            echo 'Start build Linux platform ...'
-            // Restirct build Linux plftform on special node.
-            node(label: 'master') {
-              sh 'echo "Build..."'
-            }
-            
-            
-          },
-          "Build Windowns": {
-            echo 'Start build Windows platform ...'
-            node(label: 'master') {
-              sh 'echo "Build ..."'
-            }
-            
-            
-          },
-          "build Mac": {
-            echo 'Start build Mac platform ...'
-            node(label: 'master') {
-              sh 'echo "Build ..."'
-            }
-            
-            
-          },
-          "Build Android": {
-            node(label: 'master') {
-              echo 'Start  build Android platform'
-            }
-            
-            
-          },
-          // Add this 'failFast' property to enable fail fast, for example: 
-          // if this value is 'true', any one of platform failed will terminate other platform build.
-          // if this value is 'false' (or not set this property), the pipeline will faild until all other platforms completed.
-          failFast: true
-        )
+        echo 'Get ASTRA code from Perforce'
       }
     }
-    stage('Testing') {
+    stage('ASTRA Build') {
       steps {
-        echo 'Start testing ...'
+        echo 'Start build ASTRA'
       }
     }
-    stage('Release') {
-      steps {
-        echo 'Start release ...'
-      }
-    }
-    stage('Build Documents') {
-      steps {
-        // Switch this path and then run command
-        dir(path: '/home/shanghai_fu/jks_slave/workspace/customer_ws') {
-          sh 'echo "Start build document ..."'
-        }
-        
-      }
-    }
-    stage('Generate release notes') {
-      steps {
-        sh 'echo "Start generate release notes ..."'
-      }
-    }
-    stage('Build and sync image') {
-      steps {
-        sh 'echo "Start release image ..."'
-      }
-    }
-    stage('Publish release notes') {
+    stage('Training') {
       steps {
         parallel(
-          "Publish release notes": {
-            echo 'Publish release notes'
+          "Training1": {
+            echo 'Start training 1'
             
           },
-          "Send email": {
-            echo 'send email'
+          "Traing2": {
+            echo 'Start training'
             
           },
-          "Close Fogbugz cases": {
-            echo 'Close Fogbugz cases'
+          "Training 3": {
+            echo 'Start training'
             
           }
         )
+      }
+    }
+    stage('Tag label') {
+      steps {
+        echo 'Start label'
       }
     }
   }
   environment {
     PARAMETER = 'Value'
   }
-  
-  // Define post actions after Pipeline completed regardless it's failed or success.
   post {
     always {
       echo 'Print this message regardless of the completion status of the Pipeline run.'
