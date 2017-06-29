@@ -13,6 +13,7 @@ pipeline {
 
   parameters {
         string(name: 'Greeting', defaultValue: 'Hello', description: 'How should I greet the world?')
+        string(name: 'Based_Version', defaultValue: 'r00.01', description: 'Which version need to pickup to do release?')
   }
 
   stages {
