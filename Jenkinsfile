@@ -2,19 +2,24 @@ pipeline {
   agent {
     node {
       label 'master'
-        def props = readProperties  file:'parameters.conf'
-        def Var1= props['PARA_A']
-        def Var2= props['PARA_B']
-        echo "Var1=${Var1}"
-        echo "Var2=${Var2}"
+        //def props = readProperties  file:'parameters.conf'
+        //def Var1= props['PARA_A']
+        //def Var2= props['PARA_B']
+        //echo "Var1=${Var1}"
+        //echo "Var2=${Var2}"
     }
     
+  }
+
+  parameters {
+        string(name: 'Greeting', defaultValue: 'Hello', description: 'How should I greet the world?')
   }
 
   stages {
     stage('Get ASTRA-Project-tools ') {
       steps {
         echo 'Get ASTRA-Project-tools from Perforce'
+        echo "${params.Greeting} World!"
       }
     }
     stage('Sync ASTRA code') {
