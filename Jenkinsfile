@@ -46,7 +46,7 @@ pipeline {
               //  }
               println item
               }
-          }
+          //}
           //parallel trainings
         }
       }
