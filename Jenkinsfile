@@ -31,6 +31,7 @@ pipeline {
     stage('ASTRA Build') {
       steps {
         echo 'Start build ASTRA'
+        sh "lsxx"
       }
     }
     stage('Training') {
