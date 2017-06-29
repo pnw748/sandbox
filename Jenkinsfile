@@ -31,22 +31,24 @@ pipeline {
     }
     stage('Training') {
       steps {
-        parallel(
-          "Training1": {
-            echo 'Start training 1'
-            
-          },
-          "Traing2": {
-            echo 'Start training'
-            
-          },
-          "Training 3": {
-            echo 'Start training'
-            
+        script{
+          def props = readProperties  file:'parameters.conf'
+          def training_str= props['TRAINING_LIST']
+          def trainings = [:]
+
+          def training_array=training_str.split(",")
+          for(item in training_array){  
+              trainings[item] = {
+                node(master) {
+                  echo "Starting training ${item} ..."
+                }
+              }
           }
-        )
+          parallel trainings
+        }
       }
     }
+
     stage('Tag label') {
       steps {
         echo 'Start label'
@@ -59,7 +61,7 @@ pipeline {
           echo "Var2=${Var2}"
           echo "Var3=${Var3}"
 
-          def split=Var3.split(",")  
+          def split=Var3.split(",")
           for(item in split){  
               println item 
           }  
