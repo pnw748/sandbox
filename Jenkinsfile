@@ -53,6 +53,17 @@ pipeline {
     stage('Tag label') {
       steps {
         echo 'Start label'
+        script {
+          def branches = [:]
+          for (int i = 0; i < 4; i++) {
+              def index = i
+              branches["branch${i}"] = {
+                  //build job: 'P1-3-1-Test1', parameters: [string(name: 'param1', value: "${index}")]
+                  echo "${index}"
+              }
+          }
+          parallel branches
+        }
       }
     }
   }
