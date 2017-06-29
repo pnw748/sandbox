@@ -37,17 +37,23 @@ pipeline {
           echo "training_str=${training_str}"
 
           def trainings = [:]
-
-          def training_array=training_str.split(",")
-          for(x in training_array){
-              def label = x
-              echo "========== ${label}"
-              trainings["label"] = {
-                node('master') {
-                  echo "Start training in ${label} ..."
-                }
+          for (int i = 0; i < 4; i++) {
+              def index = i
+              trainings["branch${i}"] = {
+                  echo "${index}"
               }
           }
+
+          //def training_array=training_str.split(",")
+          //for(x in training_array){
+          //    def label = x
+          //    echo "========== ${label}"
+          //    trainings["label"] = {
+          //      node('master') {
+          //        echo "Start training in ${label} ..."
+          //      }
+          //    }
+          //}
           parallel trainings
         }
       }
