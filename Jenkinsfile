@@ -59,6 +59,11 @@ pipeline {
           echo "Var2=${Var2}"
           echo "Var3=${Var3}"
 
+          def split=Var3.split(",")  
+          for(item in split){  
+              println item 
+          }  
+
           //def labels = ['master', 'master']
           def labels = []
           labels.add("l1")
