@@ -42,7 +42,7 @@ pipeline {
           for(x in training_array){
               def label = x
               echo "========== ${label}"
-              trainings[label] = {
+              trainings["label"] = {
                 node('master') {
                   echo "Start training in ${label} ..."
                 }
