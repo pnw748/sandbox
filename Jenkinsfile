@@ -31,6 +31,7 @@ pipeline {
     }
     stage('Training') {
       steps {
+        echo "Start to training"
         script{
           def props = readProperties  file:'parameters.conf'
           def training_str= props['TRAINING_LIST']
@@ -66,42 +67,6 @@ pipeline {
     stage('Tag label') {
       steps {
         echo 'Start label'
-        script {
-          def props = readProperties  file:'parameters.conf'
-          def Var1= props['PARA_A']
-          def Var2= props['PARA_B']
-          def Var3= props['TRAINING_LIST']
-          echo "Var1=${Var1}"
-          echo "Var2=${Var2}"
-          echo "Var3=${Var3}"
-
-          def split=Var3.split(",")
-          for(item in split){  
-              println item 
-          }  
-
-          //def labels = ['master', 'master']
-          //def labels = []
-          //labels.add("l1")
-          //labels.add("l2")
-          //labels.add("l3")
-
-          for (x in labels) {
-            def label = x
-            echo label
-            echo "${label}"
-          }
-
-          def branches = [:]
-          for (int i = 0; i < 4; i++) {
-              def index = i
-              branches["branch${i}"] = {
-                  //build job: 'P1-3-1-Test1', parameters: [string(name: 'param1', value: "${index}")]
-                  echo "${index}"
-              }
-          }
-          parallel branches
-        }
       }
     }
   }
