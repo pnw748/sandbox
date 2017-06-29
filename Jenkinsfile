@@ -5,6 +5,12 @@ pipeline {
     }
     
   }
+    def props = readProperties  file:'parameters.conf'
+    def Var1= props['PARA_A']
+    def Var2= props['PARA_B']
+    echo "Var1=${Var1}"
+    echo "Var2=${Var2}"
+
   stages {
     stage('Get ASTRA-Project-tools ') {
       steps {
@@ -47,11 +53,6 @@ pipeline {
   }
   environment {
     PARAMETER = 'Value'
-    def props = readProperties  file:'parameters.conf'
-    def Var1= props['PARA_A']
-    def Var2= props['PARA_B']
-    echo "Var1=${Var1}"
-    echo "Var2=${Var2}"
   }
   post {
     always {
