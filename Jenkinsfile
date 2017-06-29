@@ -39,8 +39,9 @@ pipeline {
           def trainings = [:]
 
           def training_array=training_str.split(",")
-          for(item in training_array){
+          for(x in training_array){
               def label = x
+              echo "========== ${label}"
               trainings[label] = {
                 node('master') {
                   echo "Start training in ${label} ..."
