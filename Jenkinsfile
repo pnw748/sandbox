@@ -53,9 +53,10 @@ pipeline {
           }
 
           for(y in labels){
+            def index = y
             trainings[y] = {
                 node('master') {
-                  echo "Start training in ${y} ..."
+                  echo "Start training in ${index} ..."
                 }
               }
           }
