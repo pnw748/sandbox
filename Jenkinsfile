@@ -29,6 +29,18 @@ pipeline {
         sh "lsxx || true"
       }
     }
+
+    stage('Groovy debug') {
+      steps {
+        script{
+          def data = "session=234567893egshdjchasd&userId=12345673456&timeOut=1800000"
+          def map = [:]
+          data.findAll(/([^&=]+)=([^&]+)/) { full, name, value ->  map[name] = value }
+          println map
+        }
+      }
+    }
+
     stage('Training') {
       steps {
         echo "Start to training"
