@@ -32,6 +32,7 @@ pipeline {
 
     stage('Groovy debug') {
       steps {
+        echo "Start to run Groovy script"
         script{
           def data = "session=234567893egshdjchasd&userId=12345673456&timeOut=1800000"
           def map = [:]
