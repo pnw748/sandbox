@@ -35,8 +35,16 @@ pipeline {
         echo "Start to run Groovy script"
         script{
           def data = "session=234567893egshdjchasd&userId=12345673456&timeOut=1800000"
+          //def map = [:]
+          //data.findAll(/([^&=]+)=([^&]+)/) { full, name, value ->  map[name] = value }
+          
           def map = [:]
-          data.findAll(/([^&=]+)=([^&]+)/) { full, name, value ->  map[name] = value }
+          data.splitEachLine("&"){
+            it.each{ x ->
+              def object = x.split("=")
+              map.put(object[0], object[1])
+            }
+          }
           println map
         }
       }
