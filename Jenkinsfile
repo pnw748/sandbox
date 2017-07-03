@@ -56,6 +56,8 @@ pipeline {
       steps {
         echo "Start to training"
         script{
+          def trainings = [:]
+          def Training_cmd_map = [:]
           def props = readProperties  file:'parameters.conf'
           def Training_lst_str= props['TRAINING_LIST']
           def Training_cmd_str= props['TRAINING_CMD']
@@ -63,7 +65,6 @@ pipeline {
           echo "Training_lst_str=${Training_lst_str}"
           echo "Training_cmd_str=${Training_cmd_str}"
           
-          def Training_cmd_map = [:]
           def training_elem = Training_cmd_str.split(",")
           for(elem in training_elem)
           {
@@ -72,9 +73,8 @@ pipeline {
           }
           echo Training_cmd_map.get("training2")
 
-          def trainings = [:]
-          def labels = []
           
+          def labels = []
           def training_array=Training_lst_str.split(",")
           for(x in training_array){
               labels.add(x)
@@ -84,7 +84,7 @@ pipeline {
             def index = y
             trainings[y] = {
                 node('master') {
-                  echo "Start training in ${index} ..."
+                  echo "build command: " + Training_cmd_map.get(y)
                 }
               }
           }
