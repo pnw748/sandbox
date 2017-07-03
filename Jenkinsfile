@@ -50,6 +50,7 @@ pipeline {
             map.put(object[0], object[1]) 
           }
           println map
+          println map.getAt(object[0])
         }
       }
     }
@@ -59,20 +60,25 @@ pipeline {
         echo "Start to training"
         script{
           def props = readProperties  file:'parameters.conf'
-          def training_str= props['TRAINING_LIST']
-          echo "training_str=${training_str}"
+          def Training_lst_str= props['TRAINING_LIST']
+          def Training_cmd_str= props['TRAINING_CMD']
+          
+          echo "Training_lst_str=${Training_lst_str}"
+          echo "Training_cmd_str=${Training_cmd_str}"
+          
+          def Training_cmd_map = [:]
+          def training_elem = Training_cmd_str.split(",")
+          for(elem in training_elem)
+          {
+            def object = elem.split("/")
+            Training_cmd_map.put(object[0], object[1])
+          }
+          echo Training_cmd_map.getAt("training2")
 
           def trainings = [:]
-          //for (int i = 0; i < 4; i++) {
-          //    def index = i
-          //    trainings["branch${i}"] = {
-          //        echo "${index}"
-          //    }
-          //}
           def labels = []
           
-          def training_array=training_str.split(",")
-
+          def training_array=Training_lst_str.split(",")
           for(x in training_array){
               labels.add(x)
           }
