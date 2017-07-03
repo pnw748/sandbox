@@ -72,7 +72,6 @@ pipeline {
             Training_cmd_map.put(object[0], object[1])
           }
           echo Training_cmd_map.get("training2")
-
           
           def labels = []
           def training_array=Training_lst_str.split(",")
@@ -84,7 +83,8 @@ pipeline {
             def index = y
             trainings[y] = {
                 node('master') {
-                  echo "build command: " + Training_cmd_map.get(y)
+                  //echo "Start training in ${index} ..."
+                  echo "Build command: " + Training_cmd_map.get("${index}")
                 }
               }
           }
