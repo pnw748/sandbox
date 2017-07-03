@@ -40,17 +40,14 @@ pipeline {
           //data.findAll(/([^&=]+)=([^&]+)/) { full, name, value ->  map[name] = value }
           def data_elem = data.split("&")
           for(elem in data_elem){
-            echo "==== ${elem}"
             def object = elem.split("=")
-            echo "======="
             echo object[0]
             echo object[1]
-            echo "======="
             //echo "==object[0]==, ==object[1]=="
             map.put(object[0], object[1]) 
           }
           println map
-          println map.getAt(object[0])
+          //println map.get(object[0])
         }
       }
     }
@@ -73,7 +70,7 @@ pipeline {
             def object = elem.split("/")
             Training_cmd_map.put(object[0], object[1])
           }
-          echo Training_cmd_map.getAt("training2")
+          echo Training_cmd_map.get("training2")
 
           def trainings = [:]
           def labels = []
