@@ -42,6 +42,7 @@ pipeline {
           for(elem in data_elem){
             echo "==== ${elem}"
             def object = elem.split("=")
+            echo "==object[0]==, ==object[1]=="
             map.put(object[0], object[1]) 
           }
           println map
