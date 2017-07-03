@@ -84,7 +84,7 @@ pipeline {
             trainings[y] = {
                 node('master') {
                   //echo "Start training in ${index} ..."
-                  echo "Build command: " + Training_cmd_map.get("${index}")
+                  echo "Build command: " + Training_cmd_map.get(index)
                 }
               }
           }
