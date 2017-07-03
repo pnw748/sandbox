@@ -30,28 +30,6 @@ pipeline {
       }
     }
 
-    stage('Groovy debug') {
-      steps {
-        echo "Start to run Groovy script"
-        script{
-          def map = [:]
-          def data = "session=234567893egshdjchasd&userId=12345673456&timeOut=1800000"
-          //def map = [:]
-          //data.findAll(/([^&=]+)=([^&]+)/) { full, name, value ->  map[name] = value }
-          def data_elem = data.split("&")
-          for(elem in data_elem){
-            def object = elem.split("=")
-            echo object[0]
-            echo object[1]
-            //echo "==object[0]==, ==object[1]=="
-            map.put(object[0], object[1]) 
-          }
-          println map
-          //println map.get(object[0])
-        }
-      }
-    }
-
     stage('Training') {
       steps {
         echo "Start to training"
@@ -62,16 +40,12 @@ pipeline {
           def Training_lst_str= props['TRAINING_LIST']
           def Training_cmd_str= props['TRAINING_CMD']
           
-          echo "Training_lst_str=${Training_lst_str}"
-          echo "Training_cmd_str=${Training_cmd_str}"
-          
           def training_elem = Training_cmd_str.split(",")
           for(elem in training_elem)
           {
             def object = elem.split("/")
             Training_cmd_map.put(object[0], object[1])
           }
-          echo Training_cmd_map.get("training2")
           
           def labels = []
           def training_array=Training_lst_str.split(",")
@@ -83,8 +57,7 @@ pipeline {
             def index = y
             trainings[y] = {
                 node('master') {
-                  //echo "Start training in ${index} ..."
-                  echo "Build command: " + Training_cmd_map.get(index)
+                  echo "Build Command: " + Training_cmd_map.get(index)
                 }
               }
           }
