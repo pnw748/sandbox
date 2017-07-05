@@ -1,14 +1,14 @@
 pipeline {
   agent {
     node {
-      label 'unv-shanghai-fu.nrc1.us.grid.nuance.com'
+      label 'master'
     }
     
   }
   stages {
-    stage('Sync Code') {
+    stage('Training') {
       steps {
-        echo 'Start sync code from Perforce server'
+        sh './run_training.sh'
       }
     }
   }
