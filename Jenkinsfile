@@ -20,6 +20,12 @@ pipeline {
             echo 'Printed whether above succeeded or failed.'
           }
         }
+        
+      }
+    }
+    stage('release') {
+      steps {
+        echo 'start release'
       }
     }
   }
