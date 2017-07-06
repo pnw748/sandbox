@@ -9,6 +9,7 @@ pipeline {
   parameters {
         string(name: 'Based_Version', defaultValue: 'NA', description: 'Which version (based label) need to pickup to do release?')
         string(name: 'Release_Version', defaultValue: 'NA', description: 'Input the version which you want to release, only for Release branch')
+        string(name: 'P4_Stream_Name', defaultValue: 'development', description: 'Should be one of development/mainline/release, default is development')
   }
 
   stages {
@@ -16,6 +17,7 @@ pipeline {
       steps {
         echo "${params.Based_Version}"
         echo "${params.Release_Version}"
+        echo "${params.P4_Stream_Name}"
       }
     }
     stage('Get ASTRA-Project-tools ') {
@@ -41,7 +43,7 @@ pipeline {
         script{
           def trainings = [:]
           def Training_cmd_map = [:]
-          def props = readProperties  file:'parameters.conf'
+          def props = readProperties  file:"parameters-${params.P4_Stream_Name}.conf"
           def Training_lst_str= props['TRAINING_LIST']
           def Training_cmd_str= props['TRAINING_CMD']
           
