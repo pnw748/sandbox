@@ -63,6 +63,7 @@ pipeline {
             trainings[y] = {
                 node('master') {
                   echo "Build Command: " + Training_cmd_map.get(index)
+                  echo "Build Command: " + props[index]
                 }
               }
           }
