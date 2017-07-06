@@ -7,15 +7,20 @@ pipeline {
   }
 
   parameters {
-        string(name: 'Greeting', defaultValue: 'Hello', description: 'How should I greet the world?')
-        string(name: 'Based_Version', defaultValue: 'r00.01', description: 'Which version need to pickup to do release?')
+        string(name: 'Based_Version', defaultValue: 'NA', description: 'Which version (based label) need to pickup to do release?')
+        string(name: 'Release_Version', defaultValue: 'NA', description: 'Input the version which you want to release, only for Release branch')
   }
 
   stages {
+    stage('Print Version ') {
+      steps {
+        echo "${params.Based_Version}"
+        echo "${params.Release_Version}"
+      }
+    }
     stage('Get ASTRA-Project-tools ') {
       steps {
         echo 'Get ASTRA-Project-tools from Perforce'
-        echo "${params.Greeting} World!"
       }
     }
     stage('Sync ASTRA code') {
