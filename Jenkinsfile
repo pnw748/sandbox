@@ -45,14 +45,6 @@ pipeline {
           def Training_cmd_map = [:]
           def props = readProperties  file:"parameters-${params.P4_Stream_Name}.conf"
           def Training_lst_str= props['TRAINING_LIST']
-          def Training_cmd_str= props['TRAINING_CMD']
-          
-          def training_elem = Training_cmd_str.split(",")
-          for(elem in training_elem)
-          {
-            def object = elem.split("/")
-            Training_cmd_map.put(object[0], object[1])
-          }
           
           def labels = []
           def training_array=Training_lst_str.split(",")
@@ -64,7 +56,6 @@ pipeline {
             def index = y
             trainings[y] = {
                 node('master') {
-                  echo "Build Command: " + Training_cmd_map.get(index)
                   echo "Build Command: " + props[index]
                 }
               }
