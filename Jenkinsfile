@@ -42,7 +42,6 @@ pipeline {
         echo "Start to training"
         script{
           def trainings = [:]
-          def Training_cmd_map = [:]
           def props = readProperties  file:"parameters-${params.P4_Stream_Name}.conf"
           def Training_lst_str= props['TRAINING_LIST']
           
