@@ -5,19 +5,12 @@ pipeline {
     }
     
   }
-
-  parameters {
-        string(name: 'Based_Version', defaultValue: 'NA', description: 'Which version (based label) need to pickup to do release?')
-        string(name: 'Release_Version', defaultValue: 'NA', description: 'Input the version which you want to release, only for Release branch')
-        string(name: 'P4_Stream_Name', defaultValue: 'development', description: 'Should be one of development/mainline/release, default is development')
-  }
-
   stages {
     stage('Print Version ') {
       steps {
-        echo "${params.Based_Version}"
-        echo "${params.Release_Version}"
-        echo "${params.P4_Stream_Name}"
+        echo '"${params.Based_Version}"'
+        echo '"${params.Release_Version}"'
+        echo '"${params.P4_Stream_Name}"'
       }
     }
     stage('Get ASTRA-Project-tools ') {
@@ -32,15 +25,14 @@ pipeline {
     }
     stage('ASTRA Build') {
       steps {
-        echo 'Start build ASTRA'
-        sh "lsxx || true"
+        echo 'update print message'
+        sh 'lsxx || true'
       }
     }
-
     stage('Training') {
       steps {
-        echo "Start to training"
-        script{
+        echo 'Start to training'
+        script {
           def trainings = [:]
           def props = readProperties  file:"parameters-${params.P4_Stream_Name}.conf"
           def Training_lst_str= props['TRAINING_LIST']
@@ -48,25 +40,30 @@ pipeline {
           def labels = []
           def training_array=Training_lst_str.split(",")
           for(x in training_array){
-              labels.add(x)
+            labels.add(x)
           }
-
+          
           for(y in labels){
             def index = y
             trainings[y] = {
-                node('master') {
-                  echo "Build Command: " + props[index]
-                }
+              node('master') {
+                echo "Build Command: " + props[index]
               }
+            }
           }
           parallel trainings
         }
+        
       }
     }
-
     stage('Tag label') {
       steps {
         echo 'Start label'
+      }
+    }
+    stage('post action') {
+      steps {
+        sh 'date'
       }
     }
   }
@@ -91,5 +88,10 @@ pipeline {
       
     }
     
+  }
+  parameters {
+    string(name: 'Based_Version', defaultValue: 'NA', description: 'Which version (based label) need to pickup to do release?')
+    string(name: 'Release_Version', defaultValue: 'NA', description: 'Input the version which you want to release, only for Release branch')
+    string(name: 'P4_Stream_Name', defaultValue: 'development', description: 'Should be one of development/mainline/release, default is development')
   }
 }
