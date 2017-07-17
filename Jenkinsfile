@@ -37,6 +37,9 @@ pipeline {
           def props = readProperties  file:"parameters-${params.P4_Stream_Name}.conf"
           def Training_lst_str= props['TRAINING_LIST']
           
+          def rootDir = pwd()
+          echo "Current location:" + ${rootDir}
+
           def labels = []
           def training_array=Training_lst_str.split(",")
           for(x in training_array){
