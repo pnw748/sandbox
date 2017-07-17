@@ -38,7 +38,7 @@ pipeline {
           def Training_lst_str= props['TRAINING_LIST']
           
           def rootDir = pwd()
-          echo "Current location:" + ${rootDir}
+          echo "Current location:" + {rootDir}
 
           def labels = []
           def training_array=Training_lst_str.split(",")
