@@ -21,6 +21,10 @@ pipeline {
     stage('Sync ASTRA code') {
       steps {
         echo 'Get ASTRA code from Perforce'
+        ws(dir: '/ceph/archive/groups/dragon_other/data/app-dragon-jenkins/demo_for_astra') {
+          checkout([$class: 'PerforceScm', credential: '930db830-524a-44b6-aeda-575ec6115963', populate: [$class: 'AutoCleanImpl', delete: true, modtime: false, parallel: [enable: false, minbytes: '1024', minfiles: '1', path: '/usr/local/bin/p4', threads: '4'], pin: '', quiet: true, replace: true], workspace: [$class: 'ManualWorkspaceImpl', charset: 'none', name: 'jenkins-${NODE_NAME}-${JOB_NAME}', pinHost: false, spec: [allwrite: false, backup: false, clobber: false, compress: false, line: 'LOCAL', locked: false, modtime: false, rmdir: false, serverID: '', streamName: '', type: 'WRITABLE', view: '//depot/... //jenkins-${NODE_NAME}-${JOB_NAME}/depot/...']]])
+        }
+
       }
     }
     stage('ASTRA Build') {
