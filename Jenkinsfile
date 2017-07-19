@@ -1,5 +1,3 @@
-load another_groovy_script;
-load parameters
 pipeline {
   agent {
     node {
