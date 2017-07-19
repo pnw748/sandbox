@@ -35,8 +35,8 @@ pipeline {
           def rootDir = pwd()
           echo "Current location1: " + rootDir
           echo "Current location2: ${rootDir}"
-          //def ASTRA_training = load "${rootDir}/Groovy/ASTRA_training.Groovy"
-          //ASTRA_training.run_training_1()
+          def ASTRA_training = load "${rootDir}/Groovy/ASTRA_training.Groovy"
+          ASTRA_training.run_training_1()
           //ASTRA_training.run_training_3()
         }
       }
