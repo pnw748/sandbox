@@ -1,3 +1,5 @@
+load another_groovy_script;
+load parameters
 pipeline {
   agent {
     node {
@@ -31,6 +33,14 @@ pipeline {
       steps {
         echo 'update print message'
         sh 'lsxx || true'
+        script {
+          def rootDir = pwd()
+          echo "Current location1: " + rootDir
+          echo "Current location2: ${rootDir}"
+          //def ASTRA_training = load "${rootDir}/Groovy/ASTRA_training.Groovy"
+          //ASTRA_training.run_training_1()
+          //ASTRA_training.run_training_3()
+        }
       }
     }
     stage('Training') {
@@ -40,9 +50,6 @@ pipeline {
           def trainings = [:]
           def props = readProperties  file:"parameters-${params.P4_Stream_Name}.conf"
           def Training_lst_str= props['TRAINING_LIST']
-          
-          def rootDir = pwd()
-          echo "Current location:" + rootDir
 
           def labels = []
           def training_array=Training_lst_str.split(",")
