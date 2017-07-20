@@ -13,7 +13,7 @@ pipeline {
         echo "${params.P4_Stream_Name}"
         sh '''
           echo "=======================1"
-          #echo "${params.P4_Stream_Name}"
+          echo "${P4_Stream_Name}"
           echo "=======================2"
           echo $P4_Stream_Name
           echo "=======================3"
