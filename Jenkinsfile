@@ -11,6 +11,13 @@ pipeline {
         echo '"${params.Based_Version}"'
         echo '"${params.Release_Version}"'
         echo '"${params.P4_Stream_Name}"'
+        sh '''
+          echo "=======================1"
+          echo "${params.P4_Stream_Name}"
+          echo "=======================2"
+          echo $P4_Stream_Name
+          echo "=======================3"
+        '''
       }
     }
     stage('Get ASTRA-Project-tools ') {
