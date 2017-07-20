@@ -8,9 +8,9 @@ pipeline {
   stages {
     stage('Print Version ') {
       steps {
-        echo '"${params.Based_Version}"'
-        echo '"${params.Release_Version}"'
-        echo '"${params.P4_Stream_Name}"'
+        echo "${Based_Version}"
+        echo "${Release_Version}"
+        echo "${params.P4_Stream_Name}"
         sh '''
           echo "=======================1"
           #echo "${params.P4_Stream_Name}"
