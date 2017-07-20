@@ -17,7 +17,7 @@ pipeline {
           echo "=======================2"
           echo $P4_Stream_Name
           echo "=======================3"
-          echo ${env.P4_Stream_Name}
+          #echo ${env.P4_Stream_Name}
           echo "=======================4"
         '''
       }
