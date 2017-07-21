@@ -74,6 +74,8 @@ pipeline {
                 echo "Build Command1: " + props[index]
                 sh ''' 
                   echo "Build Command2: ${cmd}"
+                  pwd
+                  ls
                   '''
               }
             }
