@@ -47,6 +47,8 @@ pipeline {
           def ASTRA_training = load "${rootDir}/Groovy/ASTRA_training.Groovy"
           ASTRA_training.run_training_1()
           //ASTRA_training.run_training_3()
+
+          
         }
       }
     }
@@ -67,8 +69,12 @@ pipeline {
           for(y in labels){
             def index = y
             trainings[y] = {
-              node('master') {
-                echo "Build Command: " + props[index]
+              node('ASTRA-unv-astra') {
+                def cmd = props[index]
+                echo "Build Command1: " + props[index]
+                sh ''' 
+                  echo "Build Command2: ${cmd}"
+                  '''
               }
             }
           }
