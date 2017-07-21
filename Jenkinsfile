@@ -72,6 +72,8 @@ pipeline {
               node('ASTRA-unv-astra') {
                 def cmd = props[index]
                 echo "Build Command1: " + props[index]
+                echo ${PARAMETER}
+                echo ${params.PARAMETER}
                 sh ''' 
                   echo "Build Command2: ${cmd}"
                   pwd
@@ -97,7 +99,7 @@ pipeline {
     }
   }
   environment {
-    PARAMETER = 'Value'
+    PARAMETER = 'Valuexxxxxxxxxxxxx'
   }
   post {
     always {
