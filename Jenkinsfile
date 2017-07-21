@@ -72,16 +72,8 @@ pipeline {
               node('ASTRA-unv-astra') {
                 def cmd = props[index]
                 echo "Build Command1: " + props[index]
-                echo "1 ${PARAMETER}"
-                echo "2 ${params.PARAMETER}"
-                echo "3 ${env.PARAMETER}"
-
-                echo "4 ${P4_Stream_Name}"
-                echo "5 ${params.P4_Stream_Name}"
-                echo "6 ${env.P4_Stream_Name}"
-
-                sh ''' 
-                  echo "Build Command2: ${cmd}"
+                sh '''
+                  ${cmd}
                   pwd
                   ls
                   '''
