@@ -71,7 +71,7 @@ pipeline {
             trainings[y] = {
               node('ASTRA-unv-astra') {
                 
-                def cmd = props[index]
+                cmd = props[index]
                 echo "Build Command1: " + props[index]
                 sh '''
                   ${cmd}
