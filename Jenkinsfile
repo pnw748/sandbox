@@ -75,8 +75,12 @@ pipeline {
                 sh '''
                   ${cmd}
                   pwd
-                  ls
+                  echo "=================="
                   '''
+                def proc = "pwd".execute();
+                def outputStream = new StringBuffer()
+                proc.waitForProcessOutput(outputStream, System.err)
+                println(outputStream .toString())
               }
             }
           }
