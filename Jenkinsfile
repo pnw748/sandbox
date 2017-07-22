@@ -78,7 +78,7 @@ pipeline {
                   pwd
                   echo "=================="
                   '''
-                sh "echo \"will run this command:\" '${cmd}' "
+                sh "echo \"will run this command1:\" '${cmd}' "
                 
                 //sh "cmd=${cmd}; " + 'echo "from shell cmd=$cmd"'
                 //sh '''
@@ -92,10 +92,7 @@ pipeline {
                 //  'echo \"==== ${cmd} ===\"'
                 //'''
                 sh '''
-                  SET local_cmd = '${cmd}'
-                  echo "${local_cmd}"
-                  echo ${local_cmd}
-                  echo $local_cmd
+                  echo \"will run this command2:\" '${cmd}'
                 '''
                 def proc = "pwd".execute();
                 def outputStream = new StringBuffer()
