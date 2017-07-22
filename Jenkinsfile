@@ -83,7 +83,8 @@ pipeline {
                 //  cmd=${cmd};
                   //echo "from shell cmd=$cmd"
                 //  '''
-                sh 'echo \"from shell cmd=${cmd}\"'
+                //sh "'echo \"from shell cmd=${cmd}\"'"
+                sh "'echo \"==== ${cmd} ===\"'"
                 def proc = "pwd".execute();
                 def outputStream = new StringBuffer()
                 proc.waitForProcessOutput(outputStream, System.err)
