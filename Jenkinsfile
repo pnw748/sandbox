@@ -92,7 +92,7 @@ pipeline {
                 //  'echo \"==== ${cmd} ===\"'
                 //'''
                 sh '''
-                  local_cmd = '${cmd}'
+                  SET local_cmd = '${cmd}'
                   echo "${local_cmd}"
                   echo ${local_cmd}
                   echo $local_cmd
