@@ -78,7 +78,7 @@ pipeline {
                   pwd
                   echo "=================="
                   '''
-                sh "echo \"will run this command:\" + '${cmd}' "
+                sh "echo \"will run this command:\" '${cmd}' "
                 
                 //sh "cmd=${cmd}; " + 'echo "from shell cmd=$cmd"'
                 //sh '''
