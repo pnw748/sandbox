@@ -78,7 +78,8 @@ pipeline {
                   pwd
                   echo "=================="
                   '''
-                sh "'${cmd}'"
+                sh "echo \"=== '${cmd}' ===\""
+                
                 //sh "cmd=${cmd}; " + 'echo "from shell cmd=$cmd"'
                 //sh '''
                 //  cmd=${cmd};
