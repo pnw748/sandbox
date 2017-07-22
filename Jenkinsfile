@@ -80,8 +80,8 @@ pipeline {
                   '''
                 //sh "cmd=${cmd}; " + 'echo "from shell cmd=$cmd"'
                 sh '''
-                  cmdx = ${cmd}
-                  echo "=== $cmdx ==="
+                  cmd=${cmd};
+                  echo "from shell cmd=$cmd"
                 '''
                 def proc = "pwd".execute();
                 def outputStream = new StringBuffer()
