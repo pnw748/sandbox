@@ -91,6 +91,12 @@ pipeline {
                 //sh '''
                 //  'echo \"==== ${cmd} ===\"'
                 //'''
+                sh '''
+                  local_cmd = '${cmd}'
+                  echo "${local_cmd}"
+                  echo ${local_cmd}
+                  echo $local_cmd
+                '''
                 def proc = "pwd".execute();
                 def outputStream = new StringBuffer()
                 proc.waitForProcessOutput(outputStream, System.err)
