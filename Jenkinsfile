@@ -79,20 +79,8 @@ pipeline {
                   echo "=================="
                   '''
                 sh "pwd; echo \"will run this command1:\" '${cmd}' "
-                
-                //sh "cmd=${cmd}; " + 'echo "from shell cmd=$cmd"'
-                //sh '''
-                //  cmd=${cmd};
-                  //echo "from shell cmd=$cmd"
-                //  '''
-                //sh "'echo \"from shell cmd=${cmd}\"'"
-                //sh "'echo \"==== ${cmd} ===\"'"
-
-                //sh '''
-                //  'echo \"==== ${cmd} ===\"'
-                //'''
                 sh '''
-                  echo \"will run this command2:\" '${cmd}'
+                  echo \"will run this command2:\" "${cmd}"
                 '''
                 def proc = "pwd".execute();
                 def outputStream = new StringBuffer()
