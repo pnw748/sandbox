@@ -70,6 +70,7 @@ pipeline {
             def index = y
             trainings[y] = {
               node('ASTRA-unv-astra') {
+                
                 def cmd = props[index]
                 echo "Build Command1: " + props[index]
                 sh '''
@@ -77,6 +78,7 @@ pipeline {
                   pwd
                   echo "=================="
                   '''
+                sh "cmd=${cmd}; " + 'echo "from shell cmd=$cmd"'
                 def proc = "pwd".execute();
                 def outputStream = new StringBuffer()
                 proc.waitForProcessOutput(outputStream, System.err)
