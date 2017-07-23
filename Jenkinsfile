@@ -1,135 +1,105 @@
 pipeline {
   agent {
     node {
-      label 'ASTRA-unv-astra'
+      label 'ASTRA-unv-jjcaballero'
     }
-    
   }
+
+
+  parameters {
+    string(name: 'Based_Version', defaultValue: 'NA', description: 'Which version (based label) need to pickup to do release?')
+    string(name: 'Release_Version', defaultValue: 'NA', description: 'Input the version which you want to release, only for Release branch')
+    string(name: 'P4_Stream_Name', defaultValue: 'development', description: 'Should be one of development/mainline/release, default is development')
+  }
+
   stages {
-    stage('Print Version ') {
+    stage('Pipeline info ') {
       steps {
-        echo "${Based_Version}"
-        echo "${Release_Version}"
+        echo "${params.Based_Version}"
+        echo "${params.Release_Version}"
         echo "${params.P4_Stream_Name}"
+      }
+    }
+    stage('ASTRA-Project-tools checkout') {
+      steps {
+        echo 'Get ASTRA-Project-tools from Perforce'
         sh '''
-          echo "=======================1"
-          echo "${P4_Stream_Name}"
-          echo "=======================2"
-          echo $P4_Stream_Name
-          echo "=======================3"
-          #echo ${env.P4_Stream_Name}
-          echo "=======================4"
+	        echo $PWD
+          echo 'Activate commonlib virt env'
+          source ${COMMONLIB_VIRTENV} > /dev/null
+          TOOL="ASTRA-project-tools"
+          [ -d $WORKSPACE/$TOOL ] && rm -rf $WORKSPACE/$TOOL
+          #pseudotty sudo -u astra p4wrapper clone $TOOL --delete_client -b main -p "${P4_Stream_Name}-debug-pipeline" -o $TOOL
+          p4wrapper clone $TOOL --delete_client -b main -p "${P4_Stream_Name}-debug-pipeline" -o $TOOL
         '''
       }
     }
-    stage('Get ASTRA-Project-tools ') {
-      steps {
-        echo 'Get ASTRA-Project-tools from Perforce'
-      }
-    }
-    stage('Sync ASTRA code') {
+    stage('ASTRA checkout') {
       steps {
         echo 'Get ASTRA code from Perforce'
-        //ws(dir: '/ceph/archive/groups/dragon_other/data/app-dragon-jenkins/demo_for_astra') {
-        //  checkout([$class: 'PerforceScm', credential: '930db830-524a-44b6-aeda-575ec6115963', populate: [$class: 'AutoCleanImpl', delete: true, modtime: false, parallel: [enable: false, minbytes: '1024', minfiles: '1', path: '/usr/local/bin/p4', threads: '4'], pin: '', quiet: true, replace: true], workspace: [$class: 'ManualWorkspaceImpl', charset: 'none', name: 'jenkins-${NODE_NAME}-${JOB_NAME}', pinHost: false, spec: [allwrite: false, backup: false, clobber: false, compress: false, line: 'LOCAL', locked: false, modtime: false, rmdir: false, serverID: '', streamName: '', type: 'WRITABLE', view: '//depot/... //jenkins-${NODE_NAME}-${JOB_NAME}/depot/...']]])
-        //}
-
+        sh '''
+          echo 'Activate commonlib virt env'
+          source ${COMMONLIB_VIRTENV} > /dev/null
+          TOOL="ASTRA"
+          [ -d $WORKSPACE/$TOOL ] && rm -rf $WORKSPACE/$TOOL
+          #pseudotty sudo -u astra p4wrapper clone $TOOL --delete_client -b dev -p "${P4_Stream_Name}-debug-pipeline" -o $TOOLw
+          p4wrapper clone $TOOL --delete_client -b main -p "${P4_Stream_Name}-debug-pipeline" -o $TOOL
+        '''
       }
     }
     stage('ASTRA Build') {
       steps {
-        echo 'update print message'
-        sh 'lsxx || true'
-        script {
-          def rootDir = pwd()
-          echo "Current location1: " + rootDir
-          echo "Current location2: ${rootDir}"
-          def ASTRA_training = load "${rootDir}/Groovy/ASTRA_training.Groovy"
-          ASTRA_training.run_training_1()
-          //ASTRA_training.run_training_3()
-
-          
+        echo 'Start build ASTRA'
+        dir(path: 'ASTRA') {
+          sh '''
+            export GPU_QUEUE_NAME='gpudev' # build and run tests in gpudev.q
+            $WORKSPACE/ASTRA-project-tools/job-runner/build_astra.sh -g
+          '''
         }
       }
     }
-    stage('Training') {
+
+    stage('ASTRA Tests') {
       steps {
-        echo 'Start to training'
-        script {
-          def trainings = [:]
-          def props = readProperties  file:"parameters-${params.P4_Stream_Name}.conf"
-          def Training_lst_str= props['TRAINING_LIST']
-
-          def labels = []
-          def training_array=Training_lst_str.split(",")
-          for(x in training_array){
-            labels.add(x)
-          }
-          
-          for(y in labels){
-            def index = y
-            trainings[y] = {
-              node('ASTRA-unv-astra') {
-                
-                cmd = props[index]
-                echo "Build Command1: " + props[index]
-                sh '''
-                  ${cmd}
-                  pwd
-                  echo "=================="
-                  '''
-                sh "pwd; echo \"will run this command1:\" '${cmd}' "
-                sh '''
-                  echo \"will run this command2:\" "${cmd}"
-                '''
-                def proc = "pwd".execute();
-                def outputStream = new StringBuffer()
-                proc.waitForProcessOutput(outputStream, System.err)
-                println(outputStream .toString())
-              }
-            }
-          }
-          parallel trainings
+        echo 'Start ASTRA tests'
+        dir(path: 'ASTRA') {
+          sh '''
+            export GPU_QUEUE_NAME='gpudev' # build and run tests in gpudev.q
+            export SGE_OPTS=" -q gpudev.q@@HGk10*"  # run at k10 only for due to speed regression
+            $WORKSPACE/ASTRA-project-tools/job-runner/run-unit-tests.sh -s -a ./
+          '''
         }
-        
       }
     }
+
     stage('Tag label') {
       steps {
         echo 'Start label'
       }
     }
-    stage('post action') {
-      steps {
-        sh 'date'
-      }
-    }
   }
   environment {
-    PARAMETER = 'Valuexxxxxxxxxxxxx'
+    PARAMETER = 'Value'
+    COMMONLIB_VIRTENV = '/amr/tools/commonlib/current/bin/activate'
+    STREAM = ${params.P4_Stream_Name}
   }
   post {
     always {
       echo 'Print this message regardless of the completion status of the Pipeline run.'
-      
+
     }
-    
+
     failure {
       echo 'Print this message if the current Pipeline has a "failed" status'
-      emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) failed', body: '''Please login in ${JENKINS_URL} first, 
+      emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) failed', body: '''Please login in ${JENKINS_URL} first,
  and then go to this url to get more information  ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: 'shanghai.fu@nuance.com')
-      
+
     }
-    
+
     success {
       echo 'Print this message if the current Pipeline has a "success" status'
-      
+
     }
-    
-  }
-  parameters {
-    string(name: 'Based_Version', defaultValue: 'NA', description: 'Which version (based label) need to pickup to do release?')
-    string(name: 'Release_Version', defaultValue: 'NA', description: 'Input the version which you want to release, only for Release branch')
-    string(name: 'P4_Stream_Name', defaultValue: 'development', description: 'Should be one of development/mainline/release, default is development')
+
   }
 }
