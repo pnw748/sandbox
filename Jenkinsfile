@@ -37,7 +37,7 @@ pipeline {
           echo 'Activate commonlib virt env'
           source ${COMMONLIB_VIRTENV} > /dev/null
           TOOL="ASTRA-project-tools"
-          [ -d $WORKSPACE/$TOOL ] && rm -rf $WORKSPACE/$TOOL
+          #[ -d $WORKSPACE/$TOOL ] && rm -rf $WORKSPACE/$TOOL
           #pseudotty sudo -u astra p4wrapper clone $TOOL --delete_client -b main -p "${P4_Stream_Name}-BO-pipeline" -o $TOOL
 	        #p4wrapper clone $TOOL --delete_client -b main -p "${P4_Stream_Name}-BO-pipeline" -o $TOOL
         '''
@@ -50,7 +50,7 @@ pipeline {
           echo 'Activate commonlib virt env'
           source ${COMMONLIB_VIRTENV} > /dev/null
           TOOL="ASTRA"
-          [ -d $WORKSPACE/$TOOL ] && rm -rf $WORKSPACE/$TOOL
+          #[ -d $WORKSPACE/$TOOL ] && rm -rf $WORKSPACE/$TOOL
           #pseudotty sudo -u astra p4wrapper clone $TOOL --delete_client -b dev -p "${P4_Stream_Name}-BO-pipeline" -o $TOOLw
           #p4wrapper clone $TOOL --delete_client -b main -p "${P4_Stream_Name}-BO-pipeline" -o $TOOL
         '''
