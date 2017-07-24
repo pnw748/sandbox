@@ -107,6 +107,7 @@ pipeline {
             trainings[y] = {
                 node('ASTRA-unv-jjcaballero') {
 		          echo "# Training: " + props[index]
+              build job: 'training_demo', parameters: [string(name: 'TRAINING_NAME', value: props[index])]
 		          //ASTRA_training.run_training(astra_path, tools_path, props[index]);
                 }
               }
