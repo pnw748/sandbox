@@ -1,3 +1,12 @@
+
+def ASTRA_training
+node('ASTRA-unv-jjcaballero'){
+    def rootDir = pwd()
+    println("root path in groovy load:" + rootDir)
+    ASTRA_training = load "${rootDir}/Groovy/ASTRA_training.Groovy"
+}
+
+
 pipeline {
   agent {
     node {
@@ -7,9 +16,9 @@ pipeline {
 
 
   parameters {
-    string(name: 'Based_Version', defaultValue: 'NA', description: 'Which version (based label) need to pickup to do release?')
-    string(name: 'Release_Version', defaultValue: 'NA', description: 'Input the version which you want to release, only for Release branch')
-    string(name: 'P4_Stream_Name', defaultValue: 'development', description: 'Should be one of development/mainline/release, default is development')
+        string(name: 'Based_Version', defaultValue: 'NA', description: 'Which version (based label) need to pickup to do release?')
+        string(name: 'Release_Version', defaultValue: 'NA', description: 'Input the version which you want to release, only for Release branch')
+        string(name: 'P4_Stream_Name', defaultValue: 'development', description: 'Should be one of development/mainline/release, default is development')
   }
 
   stages {
@@ -24,13 +33,13 @@ pipeline {
       steps {
         echo 'Get ASTRA-Project-tools from Perforce'
         sh '''
-	        echo $PWD
+	  echo $PWD
           echo 'Activate commonlib virt env'
           source ${COMMONLIB_VIRTENV} > /dev/null
           TOOL="ASTRA-project-tools"
           [ -d $WORKSPACE/$TOOL ] && rm -rf $WORKSPACE/$TOOL
-          #pseudotty sudo -u astra p4wrapper clone $TOOL --delete_client -b main -p "${P4_Stream_Name}-debug-pipeline" -o $TOOL
-          p4wrapper clone $TOOL --delete_client -b main -p "${P4_Stream_Name}-debug-pipeline" -o $TOOL
+          #pseudotty sudo -u astra p4wrapper clone $TOOL --delete_client -b main -p "${P4_Stream_Name}-BO-pipeline" -o $TOOL
+	        #p4wrapper clone $TOOL --delete_client -b main -p "${P4_Stream_Name}-BO-pipeline" -o $TOOL
         '''
       }
     }
@@ -42,8 +51,8 @@ pipeline {
           source ${COMMONLIB_VIRTENV} > /dev/null
           TOOL="ASTRA"
           [ -d $WORKSPACE/$TOOL ] && rm -rf $WORKSPACE/$TOOL
-          #pseudotty sudo -u astra p4wrapper clone $TOOL --delete_client -b dev -p "${P4_Stream_Name}-debug-pipeline" -o $TOOLw
-          p4wrapper clone $TOOL --delete_client -b main -p "${P4_Stream_Name}-debug-pipeline" -o $TOOL
+          #pseudotty sudo -u astra p4wrapper clone $TOOL --delete_client -b dev -p "${P4_Stream_Name}-BO-pipeline" -o $TOOLw
+          #p4wrapper clone $TOOL --delete_client -b main -p "${P4_Stream_Name}-BO-pipeline" -o $TOOL
         '''
       }
     }
@@ -53,7 +62,7 @@ pipeline {
         dir(path: 'ASTRA') {
           sh '''
             export GPU_QUEUE_NAME='gpudev' # build and run tests in gpudev.q
-            $WORKSPACE/ASTRA-project-tools/job-runner/build_astra.sh -g
+            #$WORKSPACE/ASTRA-project-tools/job-runner/build_astra.sh -g
           '''
         }
       }
@@ -66,9 +75,45 @@ pipeline {
           sh '''
             export GPU_QUEUE_NAME='gpudev' # build and run tests in gpudev.q
             export SGE_OPTS=" -q gpudev.q@@HGk10*"  # run at k10 only for due to speed regression
-            $WORKSPACE/ASTRA-project-tools/job-runner/run-unit-tests.sh -s -a ./
+            #$WORKSPACE/ASTRA-project-tools/job-runner/run-unit-tests.sh -s -a ./
           '''
         }
+      }
+    }
+
+    stage('Training') {
+      steps {
+        echo "Start to training"
+
+	script{
+	  def rootDir = pwd();
+	  def astra_path = rootDir + "/ASTRA";
+	  def tools_path = rootDir + "/ASTRA-project-tools";
+	  println("astra path:" + astra_path);
+	  println("tools path:" + tools_path);
+
+          def trainings = [:]
+          def props = readProperties  file:"parameters-${params.P4_Stream_Name}.conf"
+          def Training_lst_str= props['TRAINING_LIST']
+
+          def labels = []
+          def training_array=Training_lst_str.split(",")
+          for(x in training_array){
+              labels.add(x)
+          }
+
+          for(y in labels){
+            def index = y
+            trainings[y] = {
+                node('ASTRA-unv-jjcaballero') {
+		          echo "# Training: " + props[index]
+		          //ASTRA_training.run_training(astra_path, tools_path, props[index]);
+                }
+              }
+          }
+          parallel trainings 
+        }
+
       }
     }
 
