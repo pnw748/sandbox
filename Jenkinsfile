@@ -84,7 +84,7 @@ pipeline {
     stage('Training') {
       steps {
         echo "Start to training"
-        build job: 'training_demo', parameters: [string(name: 'TRAINING_NAME', value: 'xxxxxxxxxx')]
+        //build job: 'training_demo', parameters: [string(name: 'TRAINING_NAME', value: 'xxxxxxxxxx')]
 
 	script{
 	  def rootDir = pwd();
