@@ -107,23 +107,10 @@ pipeline {
             def index = y
             trainings[y] = {
               node('ASTRA-unv-astra') {
-                
-                cmd = props[index]
-                echo "Build Command1: " + props[index]
-                sh '''
-                  ${cmd}
-                  pwd
-                  echo "=================="
-                  '''
-                cmd = tools_path + "release_tools/checkout_nano_training.sh" + " -d 1 -c " + astra_path + " -r " + cmd
+                def cmd = props[index]
+                cmd = tools_path + "/release_tools/checkout_nano_training.sh" + " -d 1 -c " + astra_path + " -r " + cmd
                 sh "pwd; echo \"will run this command1:\" '${cmd}' "
-                sh '''
-                  echo \"will run this command2:\" "${cmd}"
-                '''
-                def proc = "pwd".execute();
-                def outputStream = new StringBuffer()
-                proc.waitForProcessOutput(outputStream, System.err)
-                println(outputStream .toString())
+                // sh "'${cmd}'"  //need enable this line when real run it
               }
             }
           }
