@@ -106,12 +106,25 @@ pipeline {
           for(y in labels){
             def index = y
             trainings[y] = {
-                node('ASTRA-unv-jjcaballero') {
-		          echo "# Training: " + props[index]
-              //build job: 'training_demo', parameters: [string(name: 'TRAINING_NAME', value: props[index])]
-		          //ASTRA_training.run_training(astra_path, tools_path, props[index]);
-                }
+              node('ASTRA-unv-astra') {
+                
+                cmd = props[index]
+                echo "Build Command1: " + props[index]
+                sh '''
+                  ${cmd}
+                  pwd
+                  echo "=================="
+                  '''
+                sh "pwd; echo \"will run this command1:\" '${cmd}' "
+                sh '''
+                  echo \"will run this command2:\" "${cmd}"
+                '''
+                def proc = "pwd".execute();
+                def outputStream = new StringBuffer()
+                proc.waitForProcessOutput(outputStream, System.err)
+                println(outputStream .toString())
               }
+            }
           }
           parallel trainings 
         }
