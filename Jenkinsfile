@@ -115,6 +115,7 @@ pipeline {
                   pwd
                   echo "=================="
                   '''
+                cmd = tools_path + "release_tools/checkout_nano_training.sh" + " -d 1 -c " + astra_path + " -r " + cmd
                 sh "pwd; echo \"will run this command1:\" '${cmd}' "
                 sh '''
                   echo \"will run this command2:\" "${cmd}"
