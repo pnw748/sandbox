@@ -1,4 +1,3 @@
-
 def ASTRA_training
 node('ASTRA-unv-jjcaballero'){
     def rootDir = pwd()
@@ -33,13 +32,13 @@ pipeline {
       steps {
         echo 'Get ASTRA-Project-tools from Perforce'
         sh '''
-	  echo $PWD
+          echo $PWD
           echo 'Activate commonlib virt env'
           source ${COMMONLIB_VIRTENV} > /dev/null
           TOOL="ASTRA-project-tools"
-          #[ -d $WORKSPACE/$TOOL ] && rm -rf $WORKSPACE/$TOOL
-          #pseudotty sudo -u astra p4wrapper clone $TOOL --delete_client -b main -p "${P4_Stream_Name}-BO-pipeline" -o $TOOL
-	        #p4wrapper clone $TOOL --delete_client -b main -p "${P4_Stream_Name}-BO-pipeline" -o $TOOL
+          #[ -d $WORKSPACE/$TOOL ] && pseudotty sudo -u astra rm -rf $WORKSPACE/$TOOL
+          #pseudotty sudo -u astra p4wrapper clone $TOOL --delete_client -b main -p "${P4_Stream_Name}-B1-pipeline" -o $TOOL
+          #p4wrapper clone $TOOL --delete_client -b main -p "${P4_Stream_Name}-B1-pipeline" -o $TOOL
         '''
       }
     }
@@ -50,9 +49,9 @@ pipeline {
           echo 'Activate commonlib virt env'
           source ${COMMONLIB_VIRTENV} > /dev/null
           TOOL="ASTRA"
-          #[ -d $WORKSPACE/$TOOL ] && rm -rf $WORKSPACE/$TOOL
-          #pseudotty sudo -u astra p4wrapper clone $TOOL --delete_client -b dev -p "${P4_Stream_Name}-BO-pipeline" -o $TOOLw
-          #p4wrapper clone $TOOL --delete_client -b main -p "${P4_Stream_Name}-BO-pipeline" -o $TOOL
+          #[ -d $WORKSPACE/$TOOL ] && pseudotty sudo -u astra rm -rf $WORKSPACE/$TOOL
+          #pseudotty sudo -u astra p4wrapper clone $TOOL --delete_client -b dev -p "${P4_Stream_Name}-B1-pipeline" -o $TOOL
+          #p4wrapper clone $TOOL --delete_client -b main -p "${P4_Stream_Name}-B1-pipeline" -o $TOOL
         '''
       }
     }
@@ -84,39 +83,41 @@ pipeline {
     stage('Training') {
       steps {
         echo "Start to training"
-        //build job: 'training_demo', parameters: [string(name: 'TRAINING_NAME', value: 'xxxxxxxxxx')]
+        script{
+          def rootDir = pwd();
+          def astra_path = rootDir + "/ASTRA";
+          def tools_path = rootDir + "/ASTRA-project-tools";
+          println("astra path:" + astra_path);
+          println("tools path:" + tools_path);
 
-	script{
-	  def rootDir = pwd();
-	  def astra_path = rootDir + "/ASTRA";
-	  def tools_path = rootDir + "/ASTRA-project-tools";
-	  println("astra path:" + astra_path);
-	  println("tools path:" + tools_path);
-
-          def trainings = [:]
+          // Get parameters from configure files
           def props = readProperties  file:"parameters-${params.P4_Stream_Name}.conf"
           def Training_lst_str= props['TRAINING_LIST']
 
+          // Convert string to array
           def labels = []
           def training_array=Training_lst_str.split(",")
           for(x in training_array){
               labels.add(x)
           }
 
+          def trainings = [:]
           for(y in labels){
             def index = y
             trainings[y] = {
-              node('ASTRA-unv-astra') {
+              node('ASTRA-unv-jjcaballero') {
                 def cmd = props[index]
                 cmd = tools_path + "/release_tools/checkout_nano_training.sh" + " -d 1 -c " + astra_path + " -r " + cmd
                 sh "pwd; echo \"will run this command1:\" '${cmd}' "
-                // sh "'${cmd}'"  //need enable this line when real run it
-              }
+                //sh "'${cmd}'"  //need enable this line when real run it
+                build job: 'Training_dummy', parameters: [string(name: 'ASTRA_PATH', value: props[index])]
+                
+                //ASTRA_training.run_training(astra_path, tools_path, props[index]);
+                }
             }
           }
           parallel trainings 
         }
-
       }
     }
 
