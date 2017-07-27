@@ -116,6 +116,7 @@ pipeline {
                 }
             }
           }
+          trainings.failFast = true
           parallel trainings 
         }
       }
