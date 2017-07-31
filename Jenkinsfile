@@ -17,12 +17,13 @@ pipeline {
   }
 
   stages {
-    stage('Print and verify parameters') {
+    stage('Print and verify parameters') { 
       steps {
         echo "${params.Parameter_1}"
         echo "${params.Parameter_2}"
         echo "${env.Parameter_3}"
-
+        
+        //Verify parameters 
         script{
           if ( params.Parameter_1 == "" ){
             echo 'Please entry the Parameter_1'
@@ -82,7 +83,7 @@ pipeline {
           "Build Android": {
             node(label: 'master') { // Restirct build plftform on special node.
               echo 'Start  build Android platform'
-              // add '|| true' to ignore error when command failed, the Android build failed will not failed whole Pipeline
+              // Ignore error to don’t fail Pipeline, add '|| true' to ignore error when command failed, the Android build failed will not failed whole Pipeline.
               sh 'ls xxx || true'
             }
           },
@@ -177,9 +178,18 @@ pipeline {
         echo 'Start release ...'
       }
     }
-    stage('Post Action') {
+
+    stage('Deploy') {
       steps {
-        echo 'Do post action ...'
+        def branches = [:]
+        for (int i = 0; i < 4; i++) {
+          def index = i
+          branches["branch${i}"] = {
+            // Invoke existing job
+            build job: 'existing_job', parameters: [string(name: 'param1', value: "${index}")]
+          }
+        }
+        parallel branches
       }
     }
   }
