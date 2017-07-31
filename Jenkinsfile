@@ -184,7 +184,7 @@ pipeline {
         echo "Start to deploy..."
         script{
           def branches = [:]
-          for (int i = 0; i < 4; i++) {
+          for (int i = 0; i < 3; i++) {
             def index = i
             branches["branch${i}"] = {
               // Invoke existing job
