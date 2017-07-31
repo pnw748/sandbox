@@ -122,8 +122,11 @@ pipeline {
             trainings[y] = {
               node('master') {
                 def cmd = props[index]
-                sh "echo \"[INFO] will run this command1:\" '${cmd}' "
-                cmd = cmd + " || true"
+                if ( y == 'TRAINING_3' )
+                {
+                  cmd = cmd + " || true"
+                }
+                sh "echo \"[INFO] Acctual command:\" ${cmd} "
                 sh "${cmd}"
                 //build job: 'Training_dummy', parameters: [string(name: 'ASTRA_PATH', value: props[index])]
                 }
