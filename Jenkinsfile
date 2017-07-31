@@ -7,53 +7,73 @@ pipeline {
     
   }
 
+  // Those parameters are get from use input
   parameters {
-        string(name: 'Parameter_1', defaultValue: 'NA', description: 'Please input the parameter')
-        string(name: 'Parameter_2', defaultValue: 'NA', description: 'Please input the parameter')
+    string(name: 'Parameter_1', defaultValue: 'NA', description: 'Please input the parameter')
+    string(name: 'Parameter_2', defaultValue: 'NA', description: 'Please input the parameter')
+  }
+  
+  // Define the environment variable 
+  environment {
+    Parameter_3 = 'Value'
   }
 
   stages {
-    stage('Pipeline info ') {
+    stage('Print and verify parameters') {
       steps {
         echo "${params.Parameter_1}"
         echo "${params.Parameter_2}"
+        echo "${env.Parameter_3}"
+
+        script{
+          if ( params.Parameter_1 == "NA" ){
+            echo 'Please entry the Parameter_1'
+            //error "Invalid input parameter Parameter_1"
+          }
+          if (! params.Parameter_2 ==~ /[0-9]{2,2}.[0-9]{2,2}.[0-9]{3,3}.[0-9]{5,5}/)
+          {
+            echo 'Invalid entry for S2_VERSION: params.S2_VERSION.'
+            echo 'Must be of the form: "nn.nn.nnn.nnnnn" e.g. "12.20.000.03705".'
+            //error "Invalid input parameter S2_VERSION"
+          }
+        }
       }
     }
+
+    //The pipeline job is different with freestyle job, the P4 plugin in pipeline job will sync code to workspace of master
+    //so we need to use below method to sync code into workspace of Jenkins node
     stage('Sync Code') {
       steps {
-        // Define the custom workspace to sync code, all codes will store in this directory.
-        ws(dir: '.') {
-          echo 'Start sync code'
-          //p4sync(credential: '0f2b0c8e-06fc-4f6e-afec-5191d03171ce', depotPath: '//depot/...')
+        node('master'){ //'master' should replace actual node name
+          ws(dir: '.') { // Define the custom workspace to sync code, all codes will store in this directory.
+            echo 'Start sync code'
+            //p4sync(credential: '0f2b0c8e-06fc-4f6e-afec-5191d03171ce', depotPath: '//depot/...') 
+              // '0f2b0c8e-xxxx' is ID of credential
+          }
         }
-        
       }
     }
+
     stage('Build') {
       steps {
-        // Build all platforms in parallel
+        // Build all Linux/Android/Windows in parallel
         parallel(
           "Build Linux": {
             echo 'Start build Linux platform ...'
-            node(label: 'master') {
+            node(label: 'master') { // Restirct build plftform on special node.
               sh 'echo "Build..."'
               sleep 10
             }
-            
-            
           },
           "Build Android": {
-            node(label: 'master') {
+            node(label: 'master') { // Restirct build plftform on special node.
               echo 'Start  build Android platform'
               // add '|| true' to ignore error when command failed
               sh 'ls xxx || true'
             }
-            
-            
           },
           "Build Windows": {
-            // Restirct build plftform on special node.
-            node(label: 'master') {
+            node(label: 'master') { // Restirct build plftform on special node.
               script {
                 try {
                   sh 'pwd'
@@ -71,8 +91,6 @@ pipeline {
               }
               
             }
-            
-            
           },
           // Add this 'failFast' property to enable fail fast, for example: 
           // if this value is 'true', any one of platform failed will terminate other platform build.
@@ -85,15 +103,15 @@ pipeline {
       steps {
         parallel(
           "Unit Test": {
-            echo 'Start testing ...'
+            retry(count: 3) {
+              echo 'Start testing ...'
+            }
             
           },
           "Regression Test": {
-            timeout(time: 30, unit: 'MINUTES') {
+            timeout(time: 30, unit: 'MINUTES') { //define the timeout time
               sh 'echo "do test"'
             }
-            
-            
           }
         )
       }
@@ -117,15 +135,11 @@ pipeline {
           }
 
           def trainings = [:]
-          for(y in labels){
-            def index = y
-            trainings[y] = {
+          for(training_name in labels){
+            def index = training_name
+            trainings[training_name] = {
               node('master') {
                 def cmd = props[index]
-                
-                //if ( index == "TRAINING_3" ){
-                //  cmd = cmd + " || true"
-                //}
                 sh "echo \"[INFO] Acctual command:\" ${cmd} "
                 sh "${cmd}"
                 //build job: 'Training_dummy', parameters: [string(name: 'ASTRA_PATH', value: props[index])]
@@ -162,9 +176,7 @@ pipeline {
       }
     }
   }
-  environment {
-    PARAMETER = 'Value'
-  }
+
   post {
     always {
       echo 'Print this message regardless of the completion status of the Pipeline run.'
