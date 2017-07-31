@@ -105,6 +105,7 @@ pipeline {
           "Unit Test": {
             retry(count: 3) {
               echo 'Start testing ...'
+              sh "ls xxxx"
             }
             
           },
