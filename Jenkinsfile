@@ -116,7 +116,11 @@ pipeline {
                 }
             }
           }
+          
+          // if failFast = true, one of training failed, it will terminate other training immediately, 
+          // or the pipeline will faild until all other training complete. Default value is false.
           trainings.failFast = true
+          
           parallel trainings 
         }
       }
