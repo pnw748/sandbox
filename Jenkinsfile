@@ -1,10 +1,8 @@
 pipeline {
   agent {
     node {
-      // Define the default node for all stages
-      label 'master'
+      label 'master' // Define the default node for all stages
     }
-    
   }
 
   // Those parameters are get from use input
@@ -26,9 +24,9 @@ pipeline {
         echo "${env.Parameter_3}"
 
         script{
-          if ( params.Parameter_1 == "NA" ){
+          if ( params.Parameter_1 == "" ){
             echo 'Please entry the Parameter_1'
-            //error "Invalid input parameter Parameter_1"
+            error "Parameter_1 is empty" //use 'error' to failed the pipeline
           }
           if (! params.Parameter_2 ==~ /[0-9]{2,2}.[0-9]{2,2}.[0-9]{3,3}.[0-9]{5,5}/)
           {
@@ -56,43 +54,60 @@ pipeline {
 
     stage('Build') {
       steps {
-        // Build all Linux/Android/Windows in parallel
+        // Build all platform (Linux/Android/Windows) in parallel
         parallel(
           "Build Linux": {
             echo 'Start build Linux platform ...'
             node(label: 'master') { // Restirct build plftform on special node.
-              sh 'echo "Build..."'
-              sleep 10
+              dir(path: '.') { // // Switch to '.' and then run command, you need to replace it with actual path, such as '/home/shsanghai_fu/depot/demo'
+                sh '''
+                  echo "Build..."
+                  pwd
+                  #make all
+                '''
+              }
+              // replace above command to actual command
+              
+              sleep 10 // sleep
+              
+              // another method to do build
+              sh '''
+                echo "Build..."
+                #cd /home/shsanghai_fu/depot/demo
+                pwd
+                #make all
+              '''
             }
           },
           "Build Android": {
             node(label: 'master') { // Restirct build plftform on special node.
               echo 'Start  build Android platform'
-              // add '|| true' to ignore error when command failed
+              // add '|| true' to ignore error when command failed, the Android build failed will not failed whole Pipeline
               sh 'ls xxx || true'
             }
           },
           "Build Windows": {
-            node(label: 'master') { // Restirct build plftform on special node.
+            node(label: 'master') { // Need to replace master with actual Windows node
               script {
                 try {
-                  sh 'pwd'
+                  echo "Start to build Windows..."
+                  // There is not Windows node, so I have to disable those command
+                  //bat '''
+                    //mkdir tmp_directory
+                    //cd tmp_directory
+                  //'''
                 } catch (err) {
                   echo "Failed: ${err}"
-                  // comment below line, if you want to ignore the error in 'try' section 
+                  // comment below line, if you want to ignore the error in 'try' section, and you can add more action here
                   error "Failed information: ${err}"
                 } finally {
                   echo 'Printed whether above succeeded or failed.'
                 }
                 echo 'print in script section'
-                //dir(path: '/home/shanghai_fu/jks_node/workspace/customer_ws') {
-                //  sh 'echo "Start build Windows"'
-                //}
               }
-              
             }
           },
-          // Add this 'failFast' property to enable fail fast, for example: 
+          // Fast fail the pipeline when one of pipeline step failed, Default value of failFast is false.
           // if this value is 'true', any one of platform failed will terminate other platform build.
           // if this value is 'false' (or not set this property), the pipeline will faild until all other platforms completed.
           failFast: true
@@ -105,7 +120,7 @@ pipeline {
           "Unit Test": {
             retry(count: 3) {
               echo 'Start testing ...'
-              sh "ls xxxx"
+              //sh "ls xxxx"
             }
             
           },
@@ -129,14 +144,14 @@ pipeline {
           def Training_lst_str= props['TRAINING_LIST']
 
           // Convert string to array
-          def labels = []
+          def tmp_array = []
           def training_array=Training_lst_str.split(",")
-          for(x in training_array){
-              labels.add(x)
+          for(item in training_array){
+              tmp_array.add(item)
           }
 
           def trainings = [:]
-          for(training_name in labels){
+          for(training_name in tmp_array){
             def index = training_name
             trainings[training_name] = {
               node('master') {
@@ -148,8 +163,8 @@ pipeline {
             }
           }
           
-          // if failFast = true, one of training failed, it will terminate other training immediately, 
-          // or the pipeline will faild until all other training complete. Default value is false.
+          // Fast fail the pipeline when one of pipeline step failed, Default value of failFast is false.
+          // If failFast = true, one of training failed, it will terminate other training immediately, or the pipeline will faild until all other training complete.
           trainings.failFast = true
           
           parallel trainings 
@@ -164,16 +179,7 @@ pipeline {
     }
     stage('Post Action') {
       steps {
-        // Switch this path and then run command
-        dir(path: '.') {
-          sh 'echo "Start build document ..."'
-        }
-        
-        // re-try below command three times  
-        retry(count: 3) {
-          echo 'Run this command three times'
-        }
-        
+        echo 'Do post action ...'
       }
     }
   }
