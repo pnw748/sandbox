@@ -37,7 +37,7 @@ pipeline {
             echo 'Start build Linux platform ...'
             node(label: 'master') {
               sh 'echo "Build..."'
-              sleep 30
+              sleep 10
             }
             
             
@@ -122,9 +122,10 @@ pipeline {
             trainings[y] = {
               node('master') {
                 def cmd = props[index]
-                if ( y == 'TRAINING_3' )
-                {
+                if ( y == "TRAINING_3" ){
+                  echo "====1 " + y
                   cmd = cmd + " || true"
+                  echo "====2 " + y
                 }
                 sh "echo \"[INFO] Acctual command:\" ${cmd} "
                 sh "${cmd}"
