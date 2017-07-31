@@ -181,15 +181,18 @@ pipeline {
 
     stage('Deploy') {
       steps {
-        def branches = [:]
-        for (int i = 0; i < 4; i++) {
-          def index = i
-          branches["branch${i}"] = {
-            // Invoke existing job
-            build job: 'existing_job', parameters: [string(name: 'param1', value: "${index}")]
+        echo "Start to deploy..."
+        script{
+          def branches = [:]
+          for (int i = 0; i < 4; i++) {
+            def index = i
+            branches["branch${i}"] = {
+              // Invoke existing job
+              //build job: 'existing_job', parameters: [string(name: 'param1', value: "${index}")]
+            }
           }
-        }
-        parallel branches
+          parallel branches
+        }  
       }
     }
   }
