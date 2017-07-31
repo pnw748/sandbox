@@ -122,10 +122,10 @@ pipeline {
             trainings[y] = {
               node('master') {
                 def cmd = props[index]
-                if ( y == "TRAINING_3" ){
-                  echo "====1 " + y
+                if ( index == "TRAINING_3" ){
+                  echo "====1 " + index
                   cmd = cmd + " || true"
-                  echo "====2 " + y
+                  echo "====2 " + index
                 }
                 sh "echo \"[INFO] Acctual command:\" ${cmd} "
                 sh "${cmd}"
