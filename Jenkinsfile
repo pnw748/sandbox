@@ -6,7 +6,19 @@ pipeline {
     }
     
   }
+
+  parameters {
+        string(name: 'Parameter_1', defaultValue: 'NA', description: 'Please input the parameter')
+        string(name: 'Parameter_2', defaultValue: 'NA', description: 'Please input the parameter')
+  }
+
   stages {
+    stage('Pipeline info ') {
+      steps {
+        echo "${params.Parameter_1}"
+        echo "${params.Parameter_2}"
+      }
+    }
     stage('Sync Code') {
       steps {
         // Define the custom workspace to sync code, all codes will store in this directory.
@@ -33,16 +45,18 @@ pipeline {
           "Build Android": {
             node(label: 'master') {
               echo 'Start  build Android platform'
+              // add '|| true' to ignore error when command failed
+              sh 'ls xxx || true'
             }
             
             
           },
           "Build Windows": {
             // Restirct build plftform on special node.
-            node(label: 'TextProc-bn-lm-nl7.nuance.com') {
+            node(label: 'master') {
               script {
                 try {
-                  bat 'dir'
+                  sh 'pwd'
                 } catch (err) {
                   echo "Failed: ${err}"
                   // comment below line, if you want to ignore the error in 'try' section 
@@ -84,6 +98,46 @@ pipeline {
         )
       }
     }
+    
+    stage('Training') {
+      steps {
+        echo "Start to training"
+        script{
+          
+          // Get parameters from configure files
+          def rootDir = pwd()
+          def props = readProperties  file:rootDir + "/Unified_Jenkins/Jenkinsfile/Template/parameters.conf"
+          def Training_lst_str= props['TRAINING_LIST']
+
+          // Convert string to array
+          def labels = []
+          def training_array=Training_lst_str.split(",")
+          for(x in training_array){
+              labels.add(x)
+          }
+
+          def trainings = [:]
+          for(y in labels){
+            def index = y
+            trainings[y] = {
+              node('master') {
+                def cmd = props[index]
+                sh "echo \"[INFO] will run this command1:\" '${cmd}' "
+                sh "'${cmd}' || true"
+                //build job: 'Training_dummy', parameters: [string(name: 'ASTRA_PATH', value: props[index])]
+                }
+            }
+          }
+          
+          // if failFast = true, one of training failed, it will terminate other training immediately, 
+          // or the pipeline will faild until all other training complete. Default value is false.
+          trainings.failFast = true
+          
+          parallel trainings 
+        }
+      }
+    }
+
     stage('Release') {
       steps {
         echo 'Start release ...'
