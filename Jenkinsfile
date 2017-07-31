@@ -123,7 +123,8 @@ pipeline {
               node('master') {
                 def cmd = props[index]
                 sh "echo \"[INFO] will run this command1:\" '${cmd}' "
-                sh "'${cmd}' || true"
+                cmd = cmd + " || true"
+                sh "'${cmd}'"
                 //build job: 'Training_dummy', parameters: [string(name: 'ASTRA_PATH', value: props[index])]
                 }
             }
