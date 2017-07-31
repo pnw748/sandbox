@@ -195,6 +195,12 @@ pipeline {
         }  
       }
     }
+
+    stage('Post Action') {
+      steps {
+        echo 'Start run post action ...'
+      }
+    }
   }
 
   post {
