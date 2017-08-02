@@ -106,13 +106,20 @@ pipeline {
             def index = y
             trainings[y] = {
               node('ASTRA-unv-jjcaballero') {
-                def cmd = props[index]
-                cmd = tools_path + "/release_tools/checkout_nano_training.sh" + " -d 1 -c " + astra_path + " -r " + cmd
-                sh "pwd; echo \"will run this command1:\" '${cmd}' "
+                def recipe_name = props[index]
+                //cmd = tools_path + "/release_tools/checkout_nano_training.sh" + " -d 1 -c " + astra_path + " -r " + cmd
+                //sh "pwd; echo \"will run this command1:\" '${cmd}' "
                 //sh "'${cmd}'"  //need enable this line when real run it
                 //build job: 'Training_dummy', parameters: [string(name: 'ASTRA_PATH', value: props[index])]
                 
                 //ASTRA_training.run_training(astra_path, tools_path, props[index]);
+                sh '''
+                  echo -e "\n# SETUP COMMAND for:" ${recipe_name}
+                  sh ${tools_path}/xx.sh -d 1 -c ${astra_path} -r ${recipe_name}
+
+                  echo -e "\n# RUN COMMAND for:" ${recipe_name}
+                  sh ${tools_path}/xx.sh -d 0 -c ${astra_path} -r ${recipe_name}
+                '''
                 }
             }
           }
