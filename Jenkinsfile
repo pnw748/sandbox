@@ -113,10 +113,11 @@ pipeline {
                 //build job: 'Training_dummy', parameters: [string(name: 'ASTRA_PATH', value: props[index])]
                 
                 //ASTRA_training.run_training(astra_path, tools_path, props[index]);
-                sh '''
-                  sh '${tools_path}'/xx.sh -d 1 -c '${astra_path}' -r '${recipe_name}'
-                  sh ${tools_path}/xx.sh -d 0 -c ${astra_path} -r ${recipe_name}
-                '''
+                //sh '''
+                //  sh '${tools_path}'/xx.sh -d 1 -c '${astra_path}' -r '${recipe_name}'
+                //  sh ${tools_path}/xx.sh -d 0 -c ${astra_path} -r ${recipe_name}
+                //'''
+                sh "sh ${tools_path}/xx.sh -d 0 -c ${astra_path} -r ${recipe_name}"
                 }
             }
           }
