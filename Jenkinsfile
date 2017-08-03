@@ -1,11 +1,3 @@
-def ASTRA_training
-node('ASTRA-unv-jjcaballero'){
-    def rootDir = pwd()
-    println("root path in groovy load:" + rootDir)
-    ASTRA_training = load "${rootDir}/Groovy/ASTRA_training.Groovy"
-}
-
-
 pipeline {
   agent {
     node {
@@ -119,6 +111,11 @@ pipeline {
                 //'''
                 echo "sh ${tools_path}/xx.sh -d 1 -c ${astra_path} -r ${recipe_name}"
                 echo "sh ${tools_path}/xx.sh -d 0 -c ${astra_path} -r ${recipe_name}"
+                sh '''
+                  echo "${recipe_name}"
+                  echo "'${recipe_name}'"
+                  echo "sh ${tools_path}/xx.sh -d 1 -c ${astra_path} -r ${recipe_name}"
+                '''
                 }
             }
           }
