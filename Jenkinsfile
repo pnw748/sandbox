@@ -160,7 +160,7 @@ pipeline {
           
           // Get parameters from configure files
           def rootDir = pwd()
-          def props = readProperties  file:rootDir + "/Unified_Jenkins/Jenkinsfile/Template/parameters.conf"
+          def props = readProperties  file:rootDir + "/parameters.conf"
           def Training_lst_str= props['TRAINING_LIST']
 
           // Convert string to array
