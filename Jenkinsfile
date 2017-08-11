@@ -1,17 +1,34 @@
 pipeline {
+  // 1. Define the default node for all stages
+  // 2. Define the parameters which need user input
+  // 3. Define the environment (global) variable which can used in whole Pipeline
+  // 4. Verify parameters
+  // 5. Use 'error' to failed the pipeline
+  // 6. Sync code from Perforce
+  // 7. Run build in parallel
+  // 8. Restirct build on special node
+  // 9. Ignore error to don’t fail Pipeline
+  // 10. try ... catch function
+  // 11. Fast fail the pipeline when one of pipeline step failed
+  // 12. Get parameters from configure files
+  // 13. Retry function
+  // 14. Define the timeout time
+  // 15. Invoke existing job
+  // 16. Post action which pending on Pipeline result
+
   agent {
     node {
       label 'master' // Define the default node for all stages
     }
   }
 
-  // Those parameters are get from use input
+  // Define the parameters which need user input
   parameters {
     string(name: 'Parameter_1', defaultValue: 'NA', description: 'Please input the parameter')
     string(name: 'Parameter_2', defaultValue: 'NA', description: 'Please input the parameter')
   }
   
-  // Define the environment variable 
+  // Define the environment (global) variable which can used in whole Pipeline
   environment {
     Parameter_3 = 'Value'
   }
@@ -27,7 +44,7 @@ pipeline {
         script{
           if ( params.Parameter_1 == "" ){
             echo 'Please entry the Parameter_1'
-            error "Parameter_1 is empty" //use 'error' to failed the pipeline
+            error "Parameter_1 is empty" //Use 'error' to failed the pipeline
           }
           if (! params.Parameter_2 ==~ /[0-9]{2,2}.[0-9]{2,2}.[0-9]{3,3}.[0-9]{5,5}/)
           {
@@ -39,8 +56,9 @@ pipeline {
       }
     }
 
-    //The pipeline job is different with freestyle job, the P4 plugin in pipeline job will sync code to workspace of master
-    //so we need to use below method to sync code into workspace of Jenkins node
+    // Sync code from Perforce
+    // The pipeline job is different with freestyle job, the P4 plugin in pipeline job will sync code to workspace of master
+    // so we need to use below method to sync code into workspace of Jenkins node
     stage('Sync Code') {
       steps {
         node('master'){ //'master' should replace actual node name
@@ -55,11 +73,11 @@ pipeline {
 
     stage('Build') {
       steps {
-        // Build all platform (Linux/Android/Windows) in parallel
+        // Run build in parallel (Linux/Android/Windows)
         parallel(
           "Build Linux": {
             echo 'Start build Linux platform ...'
-            node(label: 'master') { // Restirct build plftform on special node.
+            node(label: 'master') { // Restirct build on special node.
               dir(path: '.') { // // Switch to '.' and then run command, you need to replace it with actual path, such as '/home/shsanghai_fu/depot/demo'
                 sh '''
                   echo "Build..."
@@ -90,6 +108,7 @@ pipeline {
           "Build Windows": {
             node(label: 'master') { // Need to replace master with actual Windows node
               script {
+                // try ... catch function
                 try {
                   echo "Start to build Windows..."
                   // There is not Windows node, so I have to disable those command
@@ -119,14 +138,14 @@ pipeline {
       steps {
         parallel(
           "Unit Test": {
-            retry(count: 3) {
+            retry(count: 3) { // Retry function
               echo 'Start testing ...'
               //sh "ls xxxx"
             }
             
           },
           "Regression Test": {
-            timeout(time: 30, unit: 'MINUTES') { //define the timeout time
+            timeout(time: 30, unit: 'MINUTES') { // Define the timeout time
               sh 'echo "do test"'
             }
           }
@@ -141,7 +160,7 @@ pipeline {
           
           // Get parameters from configure files
           def rootDir = pwd()
-          def props = readProperties  file:rootDir + "/parameters.conf"
+          def props = readProperties  file:rootDir + "/Unified_Jenkins/Jenkinsfile/Template/parameters.conf"
           def Training_lst_str= props['TRAINING_LIST']
 
           // Convert string to array
@@ -203,6 +222,7 @@ pipeline {
     }
   }
 
+  // Post action which pending on Pipeline result
   post {
     always {
       echo 'Print this message regardless of the completion status of the Pipeline run.'
