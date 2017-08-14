@@ -44,7 +44,7 @@ pipeline {
         script{
           def rootDir = pwd()
           def external = load "${rootDir}/external.Groovy"
-          //external.verify_parameters(params.Parameter_1, params.Parameter_2)
+          external.verify_parameters(params.Parameter_1, params.Parameter_2)
 
           if ( params.Parameter_1 == "" ){
             echo 'Please entry the Parameter_1'
