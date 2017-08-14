@@ -1,5 +1,8 @@
 #!/usr/bin/env groovy
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 def pre_check(String astra_path, String tools_path) {
     //do something
     println "Start run Pre-checking"
