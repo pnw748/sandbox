@@ -17,3 +17,5 @@ def pre_check(String astra_path, String tools_path) {
     // proc.waitForProcessOutput(outputStream, System.err)
     // println(outputStream .toString())
 }
+
+return this
