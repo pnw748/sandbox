@@ -42,6 +42,10 @@ pipeline {
         
         //Verify parameters 
         script{
+          def rootDir = pwd()
+          def external = load "${rootDir}/external.Groovy"
+          external.verify_parameters(${params.Parameter_1}, ${params.Parameter_2})
+
           if ( params.Parameter_1 == "" ){
             echo 'Please entry the Parameter_1'
             error "Parameter_1 is empty" //Use 'error' to failed the pipeline
@@ -195,15 +199,6 @@ pipeline {
     stage('Release') {
       steps {
         echo 'Start release ...'
-        script{
-          def astra_path = "aaaaaaaa"
-          def tools_path = "bbbbbbbb"
-          def rootDir = pwd()
-          def external = load "${rootDir}/external.Groovy"
-
-          println(rootDir)
-          external.pre_check(astra_path, tools_path)
-        }
       }
     }
 
