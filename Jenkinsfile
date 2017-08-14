@@ -196,10 +196,13 @@ pipeline {
       steps {
         echo 'Start release ...'
         script{
-          def tools_path = 'bbbbbbbb'
+          def astra_path = "aaaaaaaa"
+          def tools_path = "bbbbbbbb"
           def rootDir = pwd()
-          def external = load "${rootDir}/external.Groovy";
-          external.pre_check('aaaaa', tools_path);
+          def external = load "${rootDir}/external.Groovy"
+
+          println(rootDir)
+          external.pre_check(astra_path, tools_path)
         }
       }
     }
