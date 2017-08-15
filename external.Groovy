@@ -9,21 +9,18 @@ def verify_parameters (String param1, String param2) {
     println("Start verify:" + param1.toString());
     println("Start verify: " + param2.toString());
 
-      //String line = "12.20.300.03764";
-      String pattern = "[0-9]{2,2}.[0-9]{2,2}.[0-9]{3,3}.[0-9]{5,5}";
+    String pattern = "[0-9]{2,2}.[0-9]{2,2}.[0-9]{3,3}.[0-9]{5,5}";
 
-      // Create a Pattern object
-      Pattern r = Pattern.compile(pattern);
+    // Create a Pattern object
+    Pattern r = Pattern.compile(pattern);
 
-      // Now create matcher object.
-      Matcher m = r.matcher(param2);
-      if (m.find( )) {
-         println("Found value: " + m.group(0))
-         println("Found value: " + m.group(1))
-         println("Found value: " + m.group(2))
-      }else {
-         println("NO MATCH")
-      }
+    // Now create matcher object.
+    Matcher m = r.matcher(param2);
+    if (m.find( )) {
+        println("Matched")
+    } else {
+        println("Unmatched")
+    }
 }
 
 return this
