@@ -52,6 +52,10 @@ pipeline {
             echo 'Must be of the form: "nn.nn.nnn.nnnnn" e.g. "12.20.000.03705".'
             //error "Invalid input parameter S2_VERSION"
           }
+          else
+          {
+            echo "not matched!!!!!"
+          }
 
           // invoke external groovy to verify parameters with Regular Expressions
           def rootDir = pwd()
