@@ -56,11 +56,6 @@ pipeline {
             echo 'Must be of the form: "nn.nn.nnn.nnnnn" e.g. "12.20.000.03705".'
             //error "Invalid input parameter S2_VERSION"
           }
-
-          // invoke external groovy to verify parameters with Regular Expressions
-          def rootDir = pwd()
-          def external = load "${rootDir}/external.Groovy"
-          external.verify_parameters(params.Parameter_1, params.Parameter_2)
         }
       }
     }
@@ -204,6 +199,18 @@ pipeline {
     stage('Release') {
       steps {
         echo 'Start release ...'
+      }
+    }
+
+    stage('Invoke External Groovy') {
+      steps {
+        echo 'Start invoke external Groovy script ...'
+        script{
+          // ### The Groovy script only run Jenkins master node ###
+          def rootDir = pwd()
+          def external = load "${rootDir}/external.Groovy"
+          external.verify_parameters(params.Parameter_1, params.Parameter_2)
+        }
       }
     }
 
