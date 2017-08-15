@@ -46,7 +46,7 @@ pipeline {
             echo 'Please entry the Parameter_1'
             error "Parameter_1 is empty" //Use 'error' to failed the pipeline
           }
-          if ( params.Parameter_2 =~ /[0-9]{2,2}.[0-9]{2,2}.[0-9]{3,3}.[0-9]{5,5}/)
+          if ( params.Parameter_2 !~ /[0-9]{2,2}.[0-9]{2,2}.[0-9]{3,3}.[0-9]{5,5}/)
           {
             echo 'Invalid entry for S2_VERSION: params.S2_VERSION.'
             echo 'Must be of the form: "nn.nn.nnn.nnnnn" e.g. "12.20.000.03705".'
@@ -54,7 +54,7 @@ pipeline {
           }
           else
           {
-            echo "not matched!!!!!"
+            echo "Matched!!!!!"
           }
 
           // invoke external groovy to verify parameters with Regular Expressions
