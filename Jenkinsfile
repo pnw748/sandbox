@@ -46,7 +46,7 @@ pipeline {
             echo 'Please entry the Parameter_1'
             error "Parameter_1 is empty" //Use 'error' to failed the pipeline
           }
-          if ( params.Parameter_2 =~ /[0-9]{2,2}.[0-9]{2,2}.[0-9]{3,3}.[0-9]{5,5}/)
+          if ( params.Parameter_2 =~ /forks\/[0-9]{2,2}.[0-9]{2,2}.[0-9]{3,3}.[0-9]{5,5}/ || params.Parameter_2 =~ /main/)
           {
             echo "Matched!!!!!"
           }
