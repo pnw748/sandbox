@@ -18,14 +18,10 @@ def verify_parameters (String param1, String param2) {
       // Now create matcher object.
       Matcher m = r.matcher(line);
       if (m.find( )) {
-         System.out.println("Found value: " + m.group(0) );
-         System.out.println("Found value: " + m.group(1) );
-         System.out.println("Found value: " + m.group(2) );
          println("Found value: " + m.group(0))
          println("Found value: " + m.group(1))
          println("Found value: " + m.group(2))
       }else {
-         System.out.println("NO MATCH");
          println("NO MATCH")
       }
 }
