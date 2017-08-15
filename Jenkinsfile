@@ -42,10 +42,6 @@ pipeline {
         
         //Verify parameters 
         script{
-          def rootDir = pwd()
-          def external = load "${rootDir}/external.Groovy"
-          external.verify_parameters(params.Parameter_1, params.Parameter_2)
-
           if ( params.Parameter_1 == "" ){
             echo 'Please entry the Parameter_1'
             error "Parameter_1 is empty" //Use 'error' to failed the pipeline
@@ -56,6 +52,11 @@ pipeline {
             echo 'Must be of the form: "nn.nn.nnn.nnnnn" e.g. "12.20.000.03705".'
             //error "Invalid input parameter S2_VERSION"
           }
+
+          // invoke external groovy to verify parameters with Regular Expressions
+          def rootDir = pwd()
+          def external = load "${rootDir}/external.Groovy"
+          external.verify_parameters(params.Parameter_1, params.Parameter_2)
         }
       }
     }
