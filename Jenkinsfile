@@ -1,6 +1,7 @@
-//def rootDir = pwd()
+def rootDir = pwd()
 //def external = load "${rootDir}/external.Groovy"
 //external.verify_parameters("aaaa", "bbbb")
+//def envs = loadEnvs();
 
 pipeline {
   // 1. Define the default node for all stages
