@@ -1,7 +1,13 @@
-//def rootDir = pwd()
-//def external = load "${rootDir}/external.Groovy"
-//external.verify_parameters("aaaa", "bbbb")
-//def envs = loadEnvs();
+def external
+node('master'){
+    def rootDir = pwd()
+    println("root path in groovy load:" + rootDir)
+    external = load "${rootDir}/external.Groovy"
+    def envs = external.load_para()
+    echo "xxxxx"
+    echo envs
+    echo "xxxxx"
+}
 
 pipeline {
   // 1. Define the default node for all stages
@@ -43,7 +49,7 @@ pipeline {
   stages {
     stage('Print and verify parameters') { 
       steps {
-        input message: 'whicih version', parameters: [choice(choices: ['V1', 'V2', 'V3'], description: '', name: 'CHOOSE')]
+        //input message: 'whicih version', parameters: [choice(choices: ['V1', 'V2', 'V3'], description: '', name: 'CHOOSE')]
         echo "${params.Parameter_1}"
         echo "${params.Parameter_2}"
         echo "${params.Parameter_3}"
@@ -214,12 +220,12 @@ pipeline {
     stage('Invoke External Groovy') {
       steps {
         echo 'Start invoke external Groovy script ...'
-        script{
+        //script{
           // ### The Groovy script only run Jenkins master node ###
-          def rootDir = pwd()
-          def external = load "${rootDir}/external.Groovy"
-          external.verify_parameters(params.Parameter_1, params.Parameter_2)
-        }
+          //def rootDir = pwd()
+          //def external = load "${rootDir}/external.Groovy"
+          //external.verify_parameters(params.Parameter_1, params.Parameter_2)
+        //}
       }
     }
 

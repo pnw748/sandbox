@@ -23,4 +23,9 @@ def verify_parameters (String param1, String param2) {
     }
 }
 
+def load_para(){
+    println "Start verify parameters"
+    return "x\ny\nz"
+}
+
 return this
