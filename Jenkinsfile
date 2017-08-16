@@ -26,11 +26,12 @@ pipeline {
   parameters {
     string(name: 'Parameter_1', defaultValue: 'NA', description: 'Please input the parameter')
     string(name: 'Parameter_2', defaultValue: 'NA', description: 'Please input the parameter')
+    choice(name: 'Parameter_3', choices: "a\nb\nc", description: 'Please select an environment', )
   }
   
   // Define the environment (global) variable which can used in whole Pipeline
   environment {
-    Parameter_3 = 'Value'
+    Parameter_4 = 'Value'
   }
 
   stages {
@@ -38,7 +39,8 @@ pipeline {
       steps {
         echo "${params.Parameter_1}"
         echo "${params.Parameter_2}"
-        echo "${env.Parameter_3}"
+        echo "${params.Parameter_3}"
+        echo "${env.Parameter_4}"
         
         //Verify parameters 
         script{
