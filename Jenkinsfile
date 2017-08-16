@@ -22,11 +22,15 @@ pipeline {
     }
   }
 
+  def rootDir = pwd()
+  def external = load "${rootDir}/external.Groovy"
+  external.verify_parameters("aaaa", "bbbb")
+
   // Define the parameters which need user input
   parameters {
     string(name: 'Parameter_1', defaultValue: 'NA', description: 'Please input the parameter')
     string(name: 'Parameter_2', defaultValue: 'NA', description: 'Please input the parameter')
-    choice(name: 'Parameter_3', choices: "a\nb\nc", description: 'Please select an environment', )
+    choice(name: 'Parameter_3', choices: "a\nb\nc", description: 'Please select an environment')
   }
   
   // Define the environment (global) variable which can used in whole Pipeline
