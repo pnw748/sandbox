@@ -1,4 +1,4 @@
-def rootDir = pwd()
+//def rootDir = pwd()
 //def external = load "${rootDir}/external.Groovy"
 //external.verify_parameters("aaaa", "bbbb")
 //def envs = loadEnvs();
@@ -32,6 +32,7 @@ pipeline {
     string(name: 'Parameter_1', defaultValue: 'NA', description: 'Please input the parameter')
     string(name: 'Parameter_2', defaultValue: 'NA', description: 'Please input the parameter')
     choice(name: 'Parameter_3', choices: "a\nb\nc", description: 'Please select an environment')
+    //input message: 'whicih version', parameters: [choice(choices: ['V1', 'V2', 'V3'], description: '', name: 'CHOOSE')]
   }
   
   // Define the environment (global) variable which can used in whole Pipeline
@@ -42,6 +43,7 @@ pipeline {
   stages {
     stage('Print and verify parameters') { 
       steps {
+        input message: 'whicih version', parameters: [choice(choices: ['V1', 'V2', 'V3'], description: '', name: 'CHOOSE')]
         echo "${params.Parameter_1}"
         echo "${params.Parameter_2}"
         echo "${params.Parameter_3}"
