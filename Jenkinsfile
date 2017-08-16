@@ -6,7 +6,7 @@ node('master'){
     //external.load_para()
     def envs = external.load_para()
     echo "xxxxx"
-    println(envs)
+    echo envs
     echo "xxxxx"
 }
 
