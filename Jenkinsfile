@@ -3,11 +3,11 @@ node('master'){
     def rootDir = pwd()
     println("root path in groovy load:" + rootDir)
     external = load "${rootDir}/external.Groovy"
-    external.load_para()
-    //def envs = external.load_para()
-    //echo "xxxxx"
-    //echo envs
-    //echo "xxxxx"
+    //external.load_para()
+    def envs = external.load_para()
+    echo "xxxxx"
+    println(envs)
+    echo "xxxxx"
 }
 
 pipeline {
