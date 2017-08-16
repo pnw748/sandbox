@@ -1,12 +1,12 @@
 def external
+def choose_parameter
 node('master'){
     def rootDir = pwd()
     println("root path in groovy load:" + rootDir)
     external = load "${rootDir}/external.Groovy"
-    //external.load_para()
-    def envs = external.load_para()
+    choose_parameter = external.load_para()
     echo "xxxxx"
-    echo envs
+    echo choose_parameter
     echo "xxxxx"
 }
 
@@ -38,7 +38,7 @@ pipeline {
   parameters {
     string(name: 'Parameter_1', defaultValue: 'NA', description: 'Please input the parameter')
     string(name: 'Parameter_2', defaultValue: 'NA', description: 'Please input the parameter')
-    choice(name: 'Parameter_3', choices: "a\nb\nc", description: 'Please select an environment')
+    choice(name: 'Parameter_3', choices: choose_parameter, description: 'Please select an environment')
     //input message: 'whicih version', parameters: [choice(choices: ['V1', 'V2', 'V3'], description: '', name: 'CHOOSE')]
   }
   
