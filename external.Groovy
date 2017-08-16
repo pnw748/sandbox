@@ -25,8 +25,10 @@ def verify_parameters (String param1, String param2) {
 
 def load_para () {
     println "Start load parameters"
-    return "x\ny\nz"
-    //return "abc"
+    def now= new Date()
+    def longType= now.time
+    //return "x\ny\nz"
+    return "x\n" + longType + "\nz"
 }
 
 return this
