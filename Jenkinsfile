@@ -1,3 +1,7 @@
+def rootDir = pwd()
+def external = load "${rootDir}/external.Groovy"
+external.verify_parameters("aaaa", "bbbb")
+
 pipeline {
   // 1. Define the default node for all stages
   // 2. Define the parameters which need user input
@@ -21,10 +25,6 @@ pipeline {
       label 'master' // Define the default node for all stages
     }
   }
-
-  def rootDir = pwd()
-  def external = load "${rootDir}/external.Groovy"
-  external.verify_parameters("aaaa", "bbbb")
 
   // Define the parameters which need user input
   parameters {
