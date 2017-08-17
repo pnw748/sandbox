@@ -1,12 +1,17 @@
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// def external
 def choose_parameter
-node('master'){
-    def now = new Date()
-    def longType = now.time
-    choose_parameter = "x\n" + longType + "\nz"
+def now = new Date()
+def longType = now.time
+choose_parameter = "x\n" + longType + "\nz"
+
+def load_para () {
+    println "Start load parameters"
+    def now= new Date()
+    def longType= now.time
+    //return "x\ny\nz"
+    return "x\n" + longType + "\nz"
 }
 
 pipeline {
@@ -55,6 +60,8 @@ pipeline {
         echo "${params.Parameter_3}"
         echo "${env.Parameter_4}"
         
+        load_para()
+
         //Verify parameters 
         script{
           if ( params.Parameter_1 == "" ){
