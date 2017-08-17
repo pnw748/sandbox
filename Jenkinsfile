@@ -1,14 +1,6 @@
 // def external
 def choose_parameter
 node('master'){
-    // def rootDir = pwd()
-    // println("root path in groovy load:" + rootDir)
-    // external = load "${rootDir}/external.Groovy"
-    // choose_parameter = external.load_para()
-    // echo "xxxxx"
-    // echo choose_parameter
-    // echo "xxxxx"
-
     def now = new Date()
     def longType = now.time
     choose_parameter = "x\n" + longType + "\nz"
@@ -111,7 +103,7 @@ pipeline {
               }
               // replace above command to actual command
               
-              sleep 10 // sleep
+              sleep 60 // sleep
               
               // another method to do build
               sh '''
