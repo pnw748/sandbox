@@ -249,12 +249,11 @@ pipeline {
       echo 'Print this message if the current Pipeline has a "failed" status'
       emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) failed', body: '''Please login in ${JENKINS_URL} first, 
  and then go to this url to get more information  ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: 'shanghai.fu@nuance.com')
-      
     }
     
     success {
       echo 'Print this message if the current Pipeline has a "success" status'
-      
+      emailext body: 'body_test', recipientProviders: [[$class: 'RequesterRecipientProvider']], subject: 'subject_test', to: '13882261570@163.com'  
     }
     
   }
