@@ -113,7 +113,7 @@ pipeline {
               }
               // replace above command to actual command
               
-              sleep 60 // sleep
+              sleep 30 // sleep
               
               // another method to do build
               sh '''
