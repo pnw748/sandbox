@@ -289,7 +289,9 @@ pipeline {
       echo 'Print this message if the current Pipeline has a "success" status'
       script{
         def primaryOwnerEmail = ownership.job.primaryOwnerEmail
-        println "Primary owner e-mail: ${primaryOwnerEmail}"
+        println "=== Primary owner e-mail: ${primaryOwnerEmail}"
+        emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) success', recipientProviders: [[$class: 'RequesterRecipientProvider']], body: '''Please login in ${JENKINS_URL} first, 
+        and then go to this url to get more information  ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: ${primaryOwnerEmail})
       }
       //emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) success', recipientProviders: [[$class: 'RequesterRecipientProvider']], body: '''Please login in ${JENKINS_URL} first, 
  //and then go to this url to get more information  ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: ${ownership.job.primaryOwnerEmail})
