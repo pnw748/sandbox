@@ -287,14 +287,18 @@ pipeline {
     
     success {
       echo 'Print this message if the current Pipeline has a "success" status'
+      
+      // Send email to user who trigger current build (who click on 'build' button)
+      emailext body: 'body_test', recipientProviders: [[$class: 'RequesterRecipientProvider']], subject: 'subject_test', to: '13882261570@163.com'
+
+      // Send email to job owner, you can reference the env variable from: https://app-dragon-jenkins.nrc1.us.grid.nuance.com:8443/pipeline-syntax/globals
+      // Please note: You must setup the owner in 'Manage Ownership' first.
       script{
         def primaryOwnerEmail = ownership.job.primaryOwnerEmail
         println "=== Primary owner e-mail: ${primaryOwnerEmail}"
         emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) success', recipientProviders: [[$class: 'RequesterRecipientProvider']], body: '''Please login in ${JENKINS_URL} first, 
         and then go to this url to get more information  ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: primaryOwnerEmail)
       }
-      //emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) success', recipientProviders: [[$class: 'RequesterRecipientProvider']], body: '''Please login in ${JENKINS_URL} first, 
- //and then go to this url to get more information  ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: ${ownership.job.primaryOwnerEmail})
     }
     
   }
