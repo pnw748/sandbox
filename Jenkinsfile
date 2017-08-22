@@ -276,8 +276,7 @@ pipeline {
     
     success {
       echo 'Print this message if the current Pipeline has a "success" status'
-      emailext body: 'body_test', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'subject_test', to: 'shanghai_fu@nuance.com'
-      
+      emailext body: 'body_test', recipientProviders: [[$class: 'RequesterRecipientProvider']], subject: 'subject_test', to: 'shanghai_fu@nuance.com'
     }
     
   }
