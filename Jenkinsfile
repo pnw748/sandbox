@@ -54,7 +54,7 @@ pipeline {
   stages {
     stage('Print and verify parameters') { 
       steps {
-        //input message: 'whicih version', parameters: [choice(choices: ['V1', 'V2', 'V3'], description: '', name: 'CHOOSE')]
+        input message: 'whicih version', parameters: [choice(choices: ['V1', 'V2', 'V3'], description: '', name: 'CHOOSE')]
         echo "${params.Parameter_1}"
         echo "${params.Parameter_2}"
         echo "${params.Parameter_3}"
