@@ -14,6 +14,11 @@ def load_para () {
     return "x\n" + longType + "\nz"
 }
 
+def userInput =  input(
+     id: 'userInput', message: 'URL Required', parameters: [
+     [$class: 'TextParameterDefinition', defaultValue: '', description: 'URL', name: 'url'],
+    ])
+
 pipeline {
   // 1. Define the default node for all stages
   // 2. Define the parameters which need user input
@@ -54,7 +59,8 @@ pipeline {
   stages {
     stage('Print and verify parameters') { 
       steps {
-        input message: 'whicih version', parameters: [choice(choices: ['V1', 'V2', 'V3'], description: '', name: 'CHOOSE')]
+        sh "echo userInput is: ${userInput}"
+        //input message: 'whicih version', parameters: [choice(choices: ['V1', 'V2', 'V3'], description: '', name: 'CHOOSE')]
         echo "${params.Parameter_1}"
         echo "${params.Parameter_2}"
         echo "${params.Parameter_3}"
