@@ -54,20 +54,16 @@ pipeline {
   // Define the environment (global) variable which can used in whole Pipeline
   environment {
     Parameter_4 = 'Value'
+    RELEASE_SCOPE = 'default'
   }
 
   stages {
     stage('Promotion') {
       steps {
         script{
-          def userInput = input(
-          id: 'userInput', message: 'Let\'s promote?', parameters: [
-          [$class: 'TextParameterDefinition', defaultValue: 'uat', description: 'Environment', name: 'env'],
-          [$class: 'TextParameterDefinition', defaultValue: 'uat1', description: 'Target', name: 'target']
-          ])
-          echo ("Env: "+userInput['env'])
-          echo ("Target: "+userInput['target'])
+          env.RELEASE_SCOPE = input message: 'User input required', ok: 'Release!', parameters: [choice(name: 'RELEASE_SCOPE', choices: 'patch\nminor\nmajor', description: 'What is the release scope?')]
         }
+        echo "${env.RELEASE_SCOPE}"
       }
     }
 
@@ -79,6 +75,7 @@ pipeline {
         echo "${params.Parameter_2}"
         echo "${params.Parameter_3}"
         echo "${env.Parameter_4}"
+        echo "${env.RELEASE_SCOPE}"
         
         load_para()
 
