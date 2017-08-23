@@ -42,7 +42,7 @@ pipeline {
   parameters {
     string(name: 'Parameter_1', defaultValue: 'NA', description: 'Please input the parameter')
     string(name: 'Parameter_2', defaultValue: 'NA', description: 'Please input the parameter')
-    //choice(name: 'Parameter_3', choices: choose_parameter, description: 'Please select an environment')
+    choice(name: 'Parameter_3', choices: 'AAA\BBB\CCC', description: 'Please select an environment')
     //input message: 'whicih version', parameters: [choice(choices: ['V1', 'V2', 'V3'], description: '', name: 'CHOOSE')]
   }
   
@@ -57,12 +57,9 @@ pipeline {
       steps {
         script{
           def now = new Date()
-          def longType = now.time
-          choose_parameter = "AAAA\n" + longType + "\nCCCC"
-
-          echo '=======1'
+          def dynamic_Choice = now.time
+          choose_parameter = "Choice-A\n" + "Choice-B\n" + dynamic_Choice
           env.BASED_VERSION = input message: 'User input required', ok: 'Release!', parameters: [choice(name: 'BASED_VERSION', choices: choose_parameter, description: 'Which version do you want to based?')]
-          echo '=======2'
         }
         echo "${env.BASED_VERSION}"
       }
