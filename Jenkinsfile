@@ -42,7 +42,7 @@ pipeline {
   parameters {
     string(name: 'Parameter_1', defaultValue: 'NA', description: 'Please input the parameter')
     string(name: 'Parameter_2', defaultValue: 'NA', description: 'Please input the parameter')
-    choice(name: 'Parameter_3', choices: 'AAA\BBB\CCC', description: 'Please select an environment')
+    choice(name: 'Parameter_3', choices: 'AAA\nBBB\nCCC', description: 'Please select an environment')
     //input message: 'whicih version', parameters: [choice(choices: ['V1', 'V2', 'V3'], description: '', name: 'CHOOSE')]
   }
   
