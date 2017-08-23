@@ -1,18 +1,18 @@
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+// import java.util.regex.Matcher;
+// import java.util.regex.Pattern;
 
-def choose_parameter
-def now = new Date()
-def longType = now.time
-choose_parameter = "x\n" + longType + "\nz"
+// def choose_parameter
+// def now = new Date()
+// def longType = now.time
+// choose_parameter = "x\n" + longType + "\nz"
 
-def load_para () {
-    println "Start load parameters"
-    def now= new Date()
-    def longType= now.time
-    //return "x\ny\nz"
-    return "x\n" + longType + "\nz"
-}
+// def load_para () {
+//     println "Start load parameters"
+//     def now= new Date()
+//     def longType= now.time
+//     //return "x\ny\nz"
+//     return "x\n" + longType + "\nz"
+// }
 
 pipeline {
   // 1. Define the default node for all stages
@@ -42,7 +42,7 @@ pipeline {
   parameters {
     string(name: 'Parameter_1', defaultValue: 'NA', description: 'Please input the parameter')
     string(name: 'Parameter_2', defaultValue: 'NA', description: 'Please input the parameter')
-    choice(name: 'Parameter_3', choices: choose_parameter, description: 'Please select an environment')
+    //choice(name: 'Parameter_3', choices: choose_parameter, description: 'Please select an environment')
     //input message: 'whicih version', parameters: [choice(choices: ['V1', 'V2', 'V3'], description: '', name: 'CHOOSE')]
   }
   
@@ -56,24 +56,28 @@ pipeline {
     stage('Promotion') {
       steps {
         script{
+          def now = new Date()
+          def longType = now.time
+          choose_parameter = "AAAA\n" + longType + "\nCCCC"
+
           echo '=======1'
-          env.RELEASE_SCOPE = input message: 'User input required', ok: 'Release!', parameters: [choice(name: 'RELEASE_SCOPE', choices: 'patch\nminor\nmajor', description: 'What is the release scope?')]
+          env.BASED_VERSION = input message: 'User input required', ok: 'Release!', parameters: [choice(name: 'BASED_VERSION', choices: choose_parameter, description: 'Which version do you want to based?')]
           echo '=======2'
         }
-        echo "${env.RELEASE_SCOPE}"
+        echo "${env.BASED_VERSION}"
       }
     }
 
-    stage('Print and verify parameters') { 
+    stage('Print and verify parameters') {
       steps {
         //input message: 'whicih version', parameters: [choice(choices: ['V1', 'V2', 'V3'], description: '', name: 'CHOOSE')]
         echo "${params.Parameter_1}"
         echo "${params.Parameter_2}"
         echo "${params.Parameter_3}"
         echo "${env.Parameter_4}"
-        echo "${env.RELEASE_SCOPE}"
+        echo "${env.BASED_VERSION}"
         
-        load_para()
+        //load_para()
 
         //Verify parameters 
         script{
