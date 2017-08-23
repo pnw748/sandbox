@@ -14,10 +14,10 @@ def load_para () {
     return "x\n" + longType + "\nz"
 }
 
-def userInput =  input(
-     id: 'userInput', message: 'URL Required', parameters: [
-     [$class: 'TextParameterDefinition', defaultValue: '', description: 'URL', name: 'url'],
-    ])
+// def userInput =  input(
+//      id: 'userInput', message: 'URL Required', parameters: [
+//      [$class: 'TextParameterDefinition', defaultValue: '', description: 'URL', name: 'url'],
+//     ])
 
 pipeline {
   // 1. Define the default node for all stages
@@ -57,6 +57,18 @@ pipeline {
   }
 
   stages {
+    stage('Promotion') {
+      script{
+        def userInput = input(
+        id: 'userInput', message: 'Let\'s promote?', parameters: [
+        [$class: 'TextParameterDefinition', defaultValue: 'uat', description: 'Environment', name: 'env'],
+        [$class: 'TextParameterDefinition', defaultValue: 'uat1', description: 'Target', name: 'target']
+        ])
+        echo ("Env: "+userInput['env'])
+        echo ("Target: "+userInput['target'])
+      }
+    }
+
     stage('Print and verify parameters') { 
       steps {
         sh "echo userInput is: ${userInput}"
