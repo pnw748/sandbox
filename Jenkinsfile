@@ -14,11 +14,6 @@ def load_para () {
     return "x\n" + longType + "\nz"
 }
 
-// def userInput =  input(
-//      id: 'userInput', message: 'URL Required', parameters: [
-//      [$class: 'TextParameterDefinition', defaultValue: '', description: 'URL', name: 'url'],
-//     ])
-
 pipeline {
   // 1. Define the default node for all stages
   // 2. Define the parameters which need user input
@@ -61,7 +56,9 @@ pipeline {
     stage('Promotion') {
       steps {
         script{
+          echo '=======1'
           env.RELEASE_SCOPE = input message: 'User input required', ok: 'Release!', parameters: [choice(name: 'RELEASE_SCOPE_PA', choices: 'patch\nminor\nmajor', description: 'What is the release scope?')]
+          echo '=======2'
         }
         echo "${env.RELEASE_SCOPE}"
       }
@@ -69,7 +66,6 @@ pipeline {
 
     stage('Print and verify parameters') { 
       steps {
-        sh "echo userInput is: ${userInput}"
         //input message: 'whicih version', parameters: [choice(choices: ['V1', 'V2', 'V3'], description: '', name: 'CHOOSE')]
         echo "${params.Parameter_1}"
         echo "${params.Parameter_2}"
