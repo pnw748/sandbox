@@ -49,7 +49,7 @@ pipeline {
   // Define the environment (global) variable which can used in whole Pipeline
   environment {
     Parameter_4 = 'Value'
-    RELEASE_SCOPE = 'default'
+    //RELEASE_SCOPE = 'default'
   }
 
   stages {
@@ -57,7 +57,7 @@ pipeline {
       steps {
         script{
           echo '=======1'
-          env.RELEASE_SCOPE = input message: 'User input required', ok: 'Release!', parameters: [choice(name: 'RELEASE_SCOPE_PA', choices: 'patch\nminor\nmajor', description: 'What is the release scope?')]
+          env.RELEASE_SCOPE = input message: 'User input required', ok: 'Release!', parameters: [choice(name: 'RELEASE_SCOPE', choices: 'patch\nminor\nmajor', description: 'What is the release scope?')]
           echo '=======2'
         }
         echo "${env.RELEASE_SCOPE}"
