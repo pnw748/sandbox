@@ -53,7 +53,7 @@ pipeline {
   }
 
   stages {
-    stage('Promotion') {
+    stage('Choose Based version') {
       steps {
         script{
           def now = new Date()
