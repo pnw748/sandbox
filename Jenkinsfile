@@ -94,7 +94,7 @@ pipeline {
           println "Parameter_4:" + env.Parameter_4
           println "BASED_VERSION:" + env.BASED_VERSION
           println "MAILLIST:" + env.maillist
-
+          println System.getProperty("user.dir")
           //Verify parameters 
           if ( params.Parameter_1 == "" ){
             echo 'Please entry the Parameter_1'
@@ -308,7 +308,6 @@ pipeline {
       echo 'Print this message if the current Pipeline has a "success" status'
       
       // Only send email to trigger user (who click on 'build' button to trigger current build)
-      //emailext(subject: 'subject_test_A', recipientProviders: [[$class: 'RequesterRecipientProvider']], body: 'body_test_A',)
       emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) success', recipientProviders: [[$class: 'RequesterRecipientProvider']], body: '''
         ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true)
       
