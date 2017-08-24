@@ -226,7 +226,7 @@ pipeline {
 
           //def training_list_tmp = env.Training_lst_str
           def tmp_array = []
-          def training_array=training_list_tmp.split(",")
+          def training_array=${env.Training_lst_str}.split(",")
           for(item in training_array){
               tmp_array.add(item)
           }
