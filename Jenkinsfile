@@ -302,16 +302,19 @@ pipeline {
     success {
       echo 'Print this message if the current Pipeline has a "success" status'
       
-      // Send email to user who trigger current build (who click on 'build' button)
-      emailext body: 'body_test_A', recipientProviders: [[$class: 'RequesterRecipientProvider']], subject: 'subject_test_A'
-      emailext body: 'body_test_B', recipientProviders: [[$class: 'DevelopersRecipientProvider']], subject: 'subject_test_B'
-      // Send email to job owner, you can reference the env variable from: https://app-dragon-jenkins.nrc1.us.grid.nuance.com:8443/pipeline-syntax/globals
-      // Please note: You must setup the owner in 'Manage Ownership' first.
+      // Only send email to trigger user (who click on 'build' button to trigger current build)
+      //emailext(subject: 'subject_test_A', recipientProviders: [[$class: 'RequesterRecipientProvider']], body: 'body_test_A',)
+      emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) success', recipientProviders: [[$class: 'RequesterRecipientProvider']], body: '''
+        ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true)
+      //emailext body: 'body_test_B', recipientProviders: [[$class: 'DevelopersRecipientProvider']], subject: 'subject_test_B'
+      
+      // Send email to trigger user and job owner (You must setup the owner in 'Manage Ownership' first), 
+      // You can reference the env variable from: https://app-dragon-jenkins.nrc1.us.grid.nuance.com:8443/pipeline-syntax/globals
       // script{
       //   def primaryOwnerEmail = ownership.job.primaryOwnerEmail
       //   println "=== Primary owner e-mail: ${primaryOwnerEmail}"
-      //   emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) success', recipientProviders: [[$class: 'RequesterRecipientProvider']], body: '''Please login in ${JENKINS_URL} first, 
-      //   and then go to this url to get more information  ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: primaryOwnerEmail)
+      //   emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) success', recipientProviders: [[$class: 'RequesterRecipientProvider']], body: '''
+      //   ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: primaryOwnerEmail)
       // }
     }
     
