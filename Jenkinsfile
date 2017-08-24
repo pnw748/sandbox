@@ -208,17 +208,25 @@ pipeline {
         script{
           
           // Get parameters from configure files
-          def rootDir = pwd()
-          def props = readProperties  file:rootDir + "/parameters.conf"
-          def training_list_tmp= props['TRAINING_LIST']
+          // def rootDir = pwd()
+          // def props = readProperties  file:rootDir + "/parameters.conf"
+          // def training_list_tmp= props['TRAINING_LIST']
 
           // Convert string to array
           println "Training_lst_str2:" + env.Training_lst_str
-          println "Training_lst_str3: $env.Training_lst_str"
-          println "Training_lst_str4: ${env.Training_lst_str}"
+          
+          println "Training_lst_str3:" + ${env.Training_lst_str}
+          println "Training_lst_str4:" + ${Training_lst_str}
+
+          println "Training_lst_str5: $env.Training_lst_str"
+          println "Training_lst_str6: $Training_lst_str"
+          
+          println "Training_lst_str7: ${env.Training_lst_str}"
+          println "Training_lst_str8: ${Training_lst_str}"
+
           //def training_list_tmp = env.Training_lst_str
           def tmp_array = []
-          def training_array=training_list_tmp.split(",")
+          def training_array=${env.Training_lst_str}.split(",")
           for(item in training_array){
               tmp_array.add(item)
           }
