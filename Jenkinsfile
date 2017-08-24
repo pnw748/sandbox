@@ -310,12 +310,12 @@ pipeline {
       
       // Send email to trigger user and job owner (You must setup the owner in 'Manage Ownership' first), 
       // You can reference the env variable from: https://app-dragon-jenkins.nrc1.us.grid.nuance.com:8443/pipeline-syntax/globals
-      // script{
-      //   def primaryOwnerEmail = ownership.job.primaryOwnerEmail
-      //   println "=== Primary owner e-mail: ${primaryOwnerEmail}"
-      //   emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) success', recipientProviders: [[$class: 'RequesterRecipientProvider']], body: '''
-      //   ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: primaryOwnerEmail)
-      // }
+      script{
+        def primaryOwnerEmail = ownership.job.primaryOwnerEmail
+        println "=== Primary owner e-mail: ${primaryOwnerEmail}"
+        emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) success', recipientProviders: [[$class: 'RequesterRecipientProvider']], body: '''
+        ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: primaryOwnerEmail)
+      }
     }
     
   }
