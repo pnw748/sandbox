@@ -63,6 +63,18 @@ pipeline {
       }
     }
 
+    stage('Get parameter from configure file') {
+      steps {
+        script{
+          def rootDir = pwd()
+          def props = readProperties  file:rootDir + "/Unified_Jenkins/Jenkinsfile/Template/parameters.conf"
+          env.Training_lst_str= props['TRAINING_LIST']
+          println "Training_lst_str1:" + env.Training_lst_str
+        }
+        echo "${env.BASED_VERSION}"
+      }
+    }
+
     stage('Print and verify parameters') {
       steps {
         echo "${params.Parameter_1}"
@@ -75,6 +87,9 @@ pipeline {
 
         //Verify parameters 
         script{
+
+          println "Training_lst_str1:" + env.Training_lst_str
+          
           if ( params.Parameter_1 == "" ){
             echo 'Please entry the Parameter_1'
             error "Parameter_1 is empty" //Use 'error' to failed the pipeline
@@ -290,7 +305,6 @@ pipeline {
       //emailext(subject: 'subject_test_A', recipientProviders: [[$class: 'RequesterRecipientProvider']], body: 'body_test_A',)
       emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) success', recipientProviders: [[$class: 'RequesterRecipientProvider']], body: '''
         ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true)
-      //emailext body: 'body_test_B', recipientProviders: [[$class: 'DevelopersRecipientProvider']], subject: 'subject_test_B'
       
       // Send email to trigger user and job owner (You must setup the owner in 'Manage Ownership' first), 
       // You can reference the env variable from: https://app-dragon-jenkins.nrc1.us.grid.nuance.com:8443/pipeline-syntax/globals
