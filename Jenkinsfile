@@ -43,13 +43,11 @@ pipeline {
     string(name: 'Parameter_1', defaultValue: 'NA', description: 'Please input the parameter')
     string(name: 'Parameter_2', defaultValue: 'NA', description: 'Please input the parameter')
     choice(name: 'Parameter_3', choices: 'AAA\nBBB\nCCC', description: 'Please select an environment')
-    //input message: 'whicih version', parameters: [choice(choices: ['V1', 'V2', 'V3'], description: '', name: 'CHOOSE')]
   }
   
   // Define the environment (global) variable which can used in whole Pipeline
   environment {
     Parameter_4 = 'Value'
-    //RELEASE_SCOPE = 'default'
   }
 
   stages {
@@ -67,7 +65,6 @@ pipeline {
 
     stage('Print and verify parameters') {
       steps {
-        //input message: 'whicih version', parameters: [choice(choices: ['V1', 'V2', 'V3'], description: '', name: 'CHOOSE')]
         echo "${params.Parameter_1}"
         echo "${params.Parameter_2}"
         echo "${params.Parameter_3}"
@@ -241,12 +238,12 @@ pipeline {
     stage('Invoke External Groovy') {
       steps {
         echo 'Start invoke external Groovy script ...'
-        //script{
+        script{
           // ### The Groovy script only run Jenkins master node ###
-          //def rootDir = pwd()
-          //def external = load "${rootDir}/external.Groovy"
-          //external.verify_parameters(params.Parameter_1, params.Parameter_2)
-        //}
+          def rootDir = pwd()
+          def external = load "${rootDir}/external.Groovy"
+          external.verify_parameters(params.Parameter_1, params.Parameter_2)
+        }
       }
     }
 
@@ -270,17 +267,6 @@ pipeline {
     stage('Post Action') {
       steps {
         echo 'Start run post action ...'
-        script{
-          def primaryOwnerEmail = ownership.job.primaryOwnerEmail
-          if (ownership.job.ownershipEnabled) {
-            println "Primary owner ID: ${ownership.job.primaryOwnerId}"
-            println "Primary owner e-mail: ${primaryOwnerEmail}"
-            println "Secondary owner IDs: ${ownership.job.secondaryOwnerIds}"
-            println "Secondary owner e-mails: ${ownership.job.secondaryOwnerEmails}"
-          } else {
-            println "Ownership is disabled";
-          }
-        }
       }
     }
   }
@@ -289,14 +275,12 @@ pipeline {
   post {
     always {
       echo 'Print this message regardless of the completion status of the Pipeline run.'
-      
     }
     
     failure {
-      echo 'Print this message if the current Pipeline has a "failed" status'
-      emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) failed', body: '''Please login in ${JENKINS_URL} first, 
- and then go to this url to get more information  ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: 'shanghai.fu@nuance.com')
-      
+      echo 'Print this message if the current Pipeline is "failed" status'
+      emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) failed', body: ''' 
+      ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: 'shanghai.fu@nuance.com')
     }
     
     success {
