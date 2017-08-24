@@ -26,19 +26,34 @@ pipeline {
   parameters {
     string(name: 'Parameter_1', defaultValue: 'NA', description: 'Please input the parameter')
     string(name: 'Parameter_2', defaultValue: 'NA', description: 'Please input the parameter')
+    choice(name: 'Parameter_3', choices: 'AAA\nBBB\nCCC', description: 'Please select an environment')
   }
   
   // Define the environment (global) variable which can used in whole Pipeline
   environment {
-    Parameter_3 = 'Value'
+    Parameter_4 = 'Value'
   }
 
   stages {
-    stage('Print and verify parameters') { 
+    stage('Choose Based version') {
+      steps {
+        script{
+          def now = new Date()
+          def dynamic_Choice = now.time
+          choose_parameter = "Choice-A\n" + "Choice-B\n" + dynamic_Choice
+          env.BASED_VERSION = input message: 'User input required', ok: 'Release!', parameters: [choice(name: 'BASED_VERSION', choices: choose_parameter, description: 'Which version do you want to based?')]
+        }
+        echo "${env.BASED_VERSION}"
+      }
+    }
+
+    stage('Print and verify parameters') {
       steps {
         echo "${params.Parameter_1}"
         echo "${params.Parameter_2}"
-        echo "${env.Parameter_3}"
+        echo "${params.Parameter_3}"
+        echo "${env.Parameter_4}"
+        echo "${env.BASED_VERSION}"
         
         //Verify parameters 
         script{
@@ -242,18 +257,31 @@ pipeline {
   post {
     always {
       echo 'Print this message regardless of the completion status of the Pipeline run.'
-      
     }
     
     failure {
-      echo 'Print this message if the current Pipeline has a "failed" status'
-      emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) failed', body: '''Please login in ${JENKINS_URL} first, 
- and then go to this url to get more information  ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: 'shanghai.fu@nuance.com')
+      echo 'Print this message if the current Pipeline is "failed" status'
+      emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) failed', body: ''' 
+      ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: 'shanghai.fu@nuance.com')
     }
     
     success {
       echo 'Print this message if the current Pipeline has a "success" status'
-      emailext body: 'body_test', recipientProviders: [[$class: 'RequesterRecipientProvider']], subject: 'subject_test', to: '13882261570@163.com'  
+      
+      // Only send email to trigger user (who click on 'build' button to trigger current build)
+      //emailext(subject: 'subject_test_A', recipientProviders: [[$class: 'RequesterRecipientProvider']], body: 'body_test_A',)
+      emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) success', recipientProviders: [[$class: 'RequesterRecipientProvider']], body: '''
+        ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true)
+      //emailext body: 'body_test_B', recipientProviders: [[$class: 'DevelopersRecipientProvider']], subject: 'subject_test_B'
+      
+      // Send email to trigger user and job owner (You must setup the owner in 'Manage Ownership' first), 
+      // You can reference the env variable from: https://app-dragon-jenkins.nrc1.us.grid.nuance.com:8443/pipeline-syntax/globals
+      script{
+        def primaryOwnerEmail = ownership.job.primaryOwnerEmail
+        println "=== Primary owner e-mail: ${primaryOwnerEmail}"
+        emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) success', recipientProviders: [[$class: 'RequesterRecipientProvider']], body: '''
+        ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: primaryOwnerEmail)
+      }
     }
     
   }
