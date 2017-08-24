@@ -127,7 +127,7 @@ pipeline {
               }
               // replace above command to actual command
               
-              sleep 30 // sleep
+              sleep 10 // sleep
               
               // another method to do build
               sh '''
@@ -303,7 +303,7 @@ pipeline {
       echo 'Print this message if the current Pipeline has a "success" status'
       
       // Send email to user who trigger current build (who click on 'build' button)
-      emailext body: 'body_test', recipientProviders: [[$class: 'RequesterRecipientProvider']], subject: 'subject_test', to: 'shanghai.fu@nuance.com'
+      emailext body: 'body_test', recipientProviders: [[$class: 'RequesterRecipientProvider']], subject: 'subject_test', to: 'null'
 
       // Send email to job owner, you can reference the env variable from: https://app-dragon-jenkins.nrc1.us.grid.nuance.com:8443/pipeline-syntax/globals
       // Please note: You must setup the owner in 'Manage Ownership' first.
