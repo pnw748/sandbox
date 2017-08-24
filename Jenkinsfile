@@ -211,13 +211,13 @@ pipeline {
         script{
           
           // Get parameters from configure files
-          def rootDir = pwd()
-          def props = readProperties  file:rootDir + "/parameters.conf"
-          def Training_lst_str= props['TRAINING_LIST']
+          //def rootDir = pwd()
+          //def props = readProperties  file:rootDir + "/parameters.conf"
+          //def Training_lst_str= props['TRAINING_LIST']
 
           // Convert string to array
           def tmp_array = []
-          def training_array=Training_lst_str.split(",")
+          def training_array=env.Training_lst_str.split(",")
           for(item in training_array){
               tmp_array.add(item)
           }
