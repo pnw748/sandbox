@@ -87,9 +87,6 @@ pipeline {
 
         //Verify parameters 
         script{
-
-          println "Training_lst_str1:" + env.Training_lst_str
-
           if ( params.Parameter_1 == "" ){
             echo 'Please entry the Parameter_1'
             error "Parameter_1 is empty" //Use 'error' to failed the pipeline
@@ -216,8 +213,10 @@ pipeline {
           //def Training_lst_str= props['TRAINING_LIST']
 
           // Convert string to array
+          println "Training_lst_str1:" + env.Training_lst_str
+          def training_list_tmp = env.Training_lst_str
           def tmp_array = []
-          def training_array=env.Training_lst_str.split(",")
+          def training_array=training_list_tmp.split(",")
           for(item in training_array){
               tmp_array.add(item)
           }
