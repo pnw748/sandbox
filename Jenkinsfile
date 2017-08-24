@@ -68,10 +68,10 @@ pipeline {
         script{
           def rootDir = pwd()
           def props = readProperties  file:rootDir + "/parameters.conf"
-          env.Training_lst_str= props['TRAINING_LIST']
-          println "Training_lst_str1:" + env.Training_lst_str
+          env.maillist= props['MAILLIST'] // this env parameter can be used in other stage
+          println "MAILLIST:" + env.maillist
         }
-        echo "${env.BASED_VERSION}"
+        echo "${env.maillist}"
       }
     }
 
@@ -82,11 +82,20 @@ pipeline {
         echo "${params.Parameter_3}"
         echo "${env.Parameter_4}"
         echo "${env.BASED_VERSION}"
+        echo "${env.maillist}"
         
         //load_para()
 
-        //Verify parameters 
         script{
+          // print parameter in script section again
+          println "Parameter_1:" + params.Parameter_1
+          println "Parameter_2:" + params.Parameter_2
+          println "Parameter_3:" + params.Parameter_3
+          println "Parameter_4:" + env.Parameter_4
+          println "BASED_VERSION:" + env.BASED_VERSION
+          println "MAILLIST:" + env.maillist
+
+          //Verify parameters 
           if ( params.Parameter_1 == "" ){
             echo 'Please entry the Parameter_1'
             error "Parameter_1 is empty" //Use 'error' to failed the pipeline
@@ -208,25 +217,13 @@ pipeline {
         script{
           
           // Get parameters from configure files
-          // def rootDir = pwd()
-          // def props = readProperties  file:rootDir + "/parameters.conf"
-          // def training_list_tmp= props['TRAINING_LIST']
+          def rootDir = pwd()
+          def props = readProperties  file:rootDir + "/parameters.conf"
+          def Training_lst_str= props['TRAINING_LIST']
 
           // Convert string to array
-          println "Training_lst_str2:" + env.Training_lst_str
-          
-          //println "Training_lst_str3:" + ${env.Training_lst_str}
-          //println "Training_lst_str4:" + ${Training_lst_str}
-
-          println "Training_lst_str5: $env.Training_lst_str"
-          println "Training_lst_str6: $Training_lst_str"
-          
-          println "Training_lst_str7: ${env.Training_lst_str}"
-          println "Training_lst_str8: ${Training_lst_str}"
-
-          def training_list_tmp = "${env.Training_lst_str}"
           def tmp_array = []
-          def training_array=training_list_tmp.split(",")
+          def training_array=Training_lst_str.split(",")
           for(item in training_array){
               tmp_array.add(item)
           }
