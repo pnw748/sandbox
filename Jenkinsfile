@@ -67,7 +67,7 @@ pipeline {
       steps {
         script{
           def rootDir = pwd()
-          def props = readProperties  file:rootDir + "/Unified_Jenkins/Jenkinsfile/Template/parameters.conf"
+          def props = readProperties  file:rootDir + "/parameters.conf"
           env.Training_lst_str= props['TRAINING_LIST']
           println "Training_lst_str1:" + env.Training_lst_str
         }
@@ -89,7 +89,7 @@ pipeline {
         script{
 
           println "Training_lst_str1:" + env.Training_lst_str
-          
+
           if ( params.Parameter_1 == "" ){
             echo 'Please entry the Parameter_1'
             error "Parameter_1 is empty" //Use 'error' to failed the pipeline
