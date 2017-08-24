@@ -214,6 +214,8 @@ pipeline {
 
           // Convert string to array
           println "Training_lst_str2:" + env.Training_lst_str
+          println "Training_lst_str3: $env.Training_lst_str"
+          println "Training_lst_str4: ${env.Training_lst_str}"
           //def training_list_tmp = env.Training_lst_str
           def tmp_array = []
           def training_array=training_list_tmp.split(",")
