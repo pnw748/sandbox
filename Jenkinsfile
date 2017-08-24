@@ -95,6 +95,7 @@ pipeline {
           println "BASED_VERSION:" + env.BASED_VERSION
           println "MAILLIST:" + env.maillist
           println System.getProperty("user.dir")
+          println new File(".").absolutePath
           //Verify parameters 
           if ( params.Parameter_1 == "" ){
             echo 'Please entry the Parameter_1'
