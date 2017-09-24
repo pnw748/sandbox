@@ -93,11 +93,16 @@ pipeline {
           println "Parameter_4:" + env.Parameter_4
           println "BASED_VERSION:" + env.BASED_VERSION
           println "MAILLIST:" + env.maillist
-          wrap([$class: 'BuildUser']) {
-            echo "${BUILD_USER}"
-            echo "${BUILD_USER_ID}"
-            echo "${BUILD_USER_EMAIL}"
-          }
+          // wrap([$class: 'BuildUser']) {
+          //   echo "${BUILD_USER}"
+          //   echo "${BUILD_USER_ID}"
+          //   echo "${BUILD_USER_EMAIL}"
+          // }
+          def build = currentBuild.rawBuild
+          def cause = build.getCause(hudson.model.Cause.UserIdCause.class)
+          def name = cause.getUserName()
+          println "User: " + name
+
           //Verify parameters 
           if ( params.Parameter_1 == "" ){
             echo 'Please entry the Parameter_1'
