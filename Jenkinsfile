@@ -83,12 +83,6 @@ pipeline {
         echo "${env.Parameter_4}"
         echo "${env.BASED_VERSION}"
         
-        wrap([$class: 'BuildUser']) {
-          echo "${BUILD_USER}"
-          echo "${BUILD_USER_ID}"
-          echo "${BUILD_USER_EMAIL}"
-        }
-        
         //load_para()
 
         script{
@@ -99,7 +93,11 @@ pipeline {
           println "Parameter_4:" + env.Parameter_4
           println "BASED_VERSION:" + env.BASED_VERSION
           println "MAILLIST:" + env.maillist
-
+          wrap([$class: 'BuildUser']) {
+            echo "${BUILD_USER}"
+            echo "${BUILD_USER_ID}"
+            echo "${BUILD_USER_EMAIL}"
+          }
           //Verify parameters 
           if ( params.Parameter_1 == "" ){
             echo 'Please entry the Parameter_1'
