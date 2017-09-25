@@ -65,17 +65,19 @@ pipeline {
 
     stage('Get parameter from configure file') {
       steps {
-        wrap([$class: 'BuildUser']) {
-          //def user = env.BUILD_USER_ID
-          //println "User name1:" + user
-          env.trigger_user = env.BUILD_USER_ID
-          println "User name2:" + env.BUILD_USER_ID
-        }
         script{
           def rootDir = pwd()
           def props = readProperties  file:rootDir + "/parameters.conf"
           env.maillist= props['MAILLIST'] // this env parameter can be used in other stage
           println "MAILLIST:" + env.maillist
+
+
+          wrap([$class: 'BuildUser']) {
+            //def user = env.BUILD_USER_ID
+            //println "User name1:" + user
+            env.trigger_user = env.BUILD_USER_ID
+            println "User name2:" + env.BUILD_USER_ID
+          }
         }
         echo "${env.maillist}"
       }
