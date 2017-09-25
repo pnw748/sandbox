@@ -101,7 +101,7 @@ pipeline {
           def build = currentBuild.rawBuild
           def cause = build.getCause(hudson.model.Cause.UserIdCause.class)
           def name = cause.getUserName()
-          println "User name: " + name
+          println "User name:" + name
 
           //Verify parameters 
           if ( params.Parameter_1 == "" ){
