@@ -65,6 +65,10 @@ pipeline {
 
     stage('Get parameter from configure file') {
       steps {
+
+        wrap([$class: 'BuildUser']) {
+            env.trigger_user_id = env.BUILD_USER_ID
+        }
         script{
           def rootDir = pwd()
           def props = readProperties  file:rootDir + "/parameters.conf"
@@ -91,6 +95,8 @@ pipeline {
         echo "${env.Parameter_4}"
         echo "${env.BASED_VERSION}"        
         echo "trigger user: ${env.trigger_user}"
+        echo "trigger user id: ${env.trigger_user_id}"
+      
         //load_para()
         
 
