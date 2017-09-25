@@ -85,8 +85,8 @@ pipeline {
         
         //load_para()
         wrap([$class: 'BuildUser']) {
-          def user = env.BUILD_USER_ID
-          println "User name1:" + user
+          //def user = env.BUILD_USER_ID
+          //println "User name1:" + user
           println "User name2:" + env.BUILD_USER_ID
         }
 
