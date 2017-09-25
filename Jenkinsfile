@@ -82,11 +82,13 @@ pipeline {
         echo "${params.Parameter_3}"
         echo "${env.Parameter_4}"
         echo "${env.BASED_VERSION}"
+        echo "${env.BUILD_USER_ID}"
         
         //load_para()
         wrap([$class: 'BuildUser']) {
           //def user = env.BUILD_USER_ID
           //println "User name1:" + user
+          //env.trigger_user = 
           println "User name2:" + env.BUILD_USER_ID
         }
 
