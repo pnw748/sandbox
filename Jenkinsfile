@@ -16,7 +16,7 @@ pipeline {
                 sh(libraryResource('com/nuance/python.sh'))
                 common()
                 common_with_para("shanghai")
-                //common_import("test")
+                common_import("test")
                 //evenOrOdd(currentBuild.getNumber())
             }
         }
