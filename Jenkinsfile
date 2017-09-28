@@ -22,12 +22,12 @@ pipeline {
                 //compileFile("puppetboard")
 
                 script{
-                    fc = new FileCompiler(this, project)
+                    fc = new FileCompiler(this, "testproject")
                     fc.analyze('requirements.txt')
                     fc.analyze('setup.py')
 
                     //println(fc.verifpara('4000'))
-                    def var = fc.verifpara('666')
+                    def var = fc.verifpara('6666')
                     println var
                 }
             }
