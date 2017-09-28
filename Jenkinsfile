@@ -1,5 +1,6 @@
 @Library('shared_library') _
 import com.nuance.FileCompiler
+import com.nuance.Utility
 
 pipeline {
     agent any
@@ -27,7 +28,8 @@ pipeline {
                     // fc.analyze('setup.py')
 
                     //println(fc.verifpara('4000'))
-                    def var = FileCompiler.verifpara_sta('8888')
+                    //def var = FileCompiler.verifpara_sta('8888')
+                    def var = Utility.verifpara('9999')
                     println var
                 }
             }
