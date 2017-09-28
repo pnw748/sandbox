@@ -18,6 +18,7 @@ pipeline {
                 common_with_para("shanghai")
                 common_import("test")
                 //evenOrOdd(currentBuild.getNumber())
+                compileFile("puppetboard")
             }
         }
     } 
