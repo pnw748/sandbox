@@ -19,17 +19,17 @@ pipeline {
                 common_with_para("shanghai")
                 common_import("test")
                 //evenOrOdd(currentBuild.getNumber())
-                compileFile("puppetboard")
+                //compileFile("puppetboard")
 
-                // script{
-                //     fc = new FileCompiler(this, "testproject")
-                //     fc.analyze('requirements.txt')
-                //     fc.analyze('setup.py')
+                script{
+                    fc = new FileCompiler(this, "testproject")
+                    fc.analyze('requirements.txt')
+                    fc.analyze('setup.py')
 
-                //     //println(fc.verifpara('4000'))
-                //     def var = fc.verifpara('6666')
-                //     println var
-                // }
+                    //println(fc.verifpara('4000'))
+                    def var = fc.verifpara('7777')
+                    println var
+                }
             }
         }
     } 
