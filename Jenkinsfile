@@ -1,4 +1,4 @@
-@Library('pythonhelpers') _
+@Library('shared_library') _
 
 pipeline {
     agent any
