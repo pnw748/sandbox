@@ -1,4 +1,5 @@
 @Library('shared_library') _
+import com.nuance.FileCompiler
 
 pipeline {
     agent any
@@ -18,7 +19,17 @@ pipeline {
                 common_with_para("shanghai")
                 common_import("test")
                 //evenOrOdd(currentBuild.getNumber())
-                compileFile("puppetboard")
+                //compileFile("puppetboard")
+
+                script{
+                    fc = new FileCompiler(this, project)
+                    fc.analyze('requirements.txt')
+                    fc.analyze('setup.py')
+
+                    //println(fc.verifpara('4000'))
+                    def var = fc.verifpara('4000')
+                    println var
+                }
             }
         }
     } 
