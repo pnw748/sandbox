@@ -27,7 +27,7 @@ pipeline {
                     fc.analyze('setup.py')
 
                     //println(fc.verifpara('4000'))
-                    def var = fc.verifpara('4000')
+                    def var = fc.verifpara('666')
                     println var
                 }
             }
