@@ -30,7 +30,7 @@ pipeline {
                     //println(fc.verifpara('4000'))
                     //def var = FileCompiler.verifpara_sta('8888')
                     def var = Utility.verifpara('1000')
-                    println var
+                    println "=======" + var
                 }
             }
         }
