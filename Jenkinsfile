@@ -1,19 +1,3 @@
-// import java.util.regex.Matcher;
-// import java.util.regex.Pattern;
-
-// def choose_parameter
-// def now = new Date()
-// def longType = now.time
-// choose_parameter = "x\n" + longType + "\nz"
-
-// def load_para () {
-//     println "Start load parameters"
-//     def now= new Date()
-//     def longType= now.time
-//     //return "x\ny\nz"
-//     return "x\n" + longType + "\nz"
-// }
-
 pipeline {
   // 1. Define the default node for all stages
   // 2. Define the parameters which need user input
@@ -31,6 +15,7 @@ pipeline {
   // 14. Define the timeout time
   // 15. Invoke existing job
   // 16. Post action which pending on Pipeline result
+  // 17. Get build user info
 
   agent {
     node {
@@ -51,36 +36,30 @@ pipeline {
   }
 
   stages {
-    stage('Choose Based version') {
-      steps {
-        script{
-          def now = new Date()
-          def dynamic_Choice = now.time
-          choose_parameter = "Choice-A\n" + "Choice-B\n" + dynamic_Choice
-          env.BASED_VERSION = input message: 'User input required', ok: 'Release!', parameters: [choice(name: 'BASED_VERSION', choices: choose_parameter, description: 'Which version do you want to based?')]
-        }
-        echo "${env.BASED_VERSION}"
-      }
-    }
+    // stage('Choose Based version') {
+    //   steps {
+    //     script{
+    //       def now = new Date()
+    //       def dynamic_Choice = now.time
+    //       choose_parameter = "Choice-A\n" + "Choice-B\n" + dynamic_Choice
+    //       env.BASED_VERSION = input message: 'User input required', ok: 'Release!', parameters: [choice(name: 'BASED_VERSION', choices: choose_parameter, description: 'Which version do you want to based?')]
+    //     }
+    //     echo "${env.BASED_VERSION}"
+    //   }
+    // }
 
-    stage('Get parameter from configure file') {
+    stage('Get parameter') {
       steps {
-
-        wrap([$class: 'BuildUser']) {
-            env.trigger_user_id = env.BUILD_USER_ID
-        }
         script{
           def rootDir = pwd()
           def props = readProperties  file:rootDir + "/parameters.conf"
-          env.maillist= props['MAILLIST'] // this env parameter can be used in other stage
+          env.maillist= props['MAILLIST'] // This env parameter can be used in other stage
           println "MAILLIST:" + env.maillist
 
-
+          // Get build user info
           wrap([$class: 'BuildUser']) {
-            //def user = env.BUILD_USER_ID
-            //println "User name1:" + user
-            env.trigger_user = env.BUILD_USER_ID
-            println "User name2:" + env.BUILD_USER_ID
+            env.trigger_user_id = env.BUILD_USER_ID //The env parameter 'trigger_user_id' can be used for other stage.
+            env.trigger_user_email = env.BUILD_USER_EMAIL 
           }
         }
         echo "${env.maillist}"
@@ -93,11 +72,9 @@ pipeline {
         echo "${params.Parameter_2}"
         echo "${params.Parameter_3}"
         echo "${env.Parameter_4}"
-        echo "${env.BASED_VERSION}"        
-        echo "trigger user: ${env.trigger_user}"
-        echo "trigger user id: ${env.trigger_user_id}"
-      
-        //load_para()
+        echo "${env.BASED_VERSION}"
+        echo "${env.maillist}"
+        echo "${env.trigger_user_id}"
         
 
         script{
@@ -108,21 +85,9 @@ pipeline {
           println "Parameter_4:" + env.Parameter_4
           println "BASED_VERSION:" + env.BASED_VERSION
           println "MAILLIST:" + env.maillist
-          wrap([$class: 'BuildUser']) {
-            def user = env.BUILD_USER_ID
-            println "User name1:" + user
-            println "User name2:" + env.BUILD_USER_ID
-          }
-          // wrap([$class: 'BuildUser']) {
-          //   echo "${BUILD_USER}"
-          //   echo "${BUILD_USER_ID}"
-          //   echo "${BUILD_USER_EMAIL}"
-          // }
-          // def build = currentBuild.rawBuild
-          // def cause = build.getCause(hudson.model.Cause.UserIdCause.class)
-          // def name = cause.getUserName()
-          // println "User name:" + name
-
+          println "TRIGGER_USER_ID:" + env.trigger_user_id
+          println "TRIGGER_USER_EMAIL:" + env.trigger_user_email
+          
           //Verify parameters 
           if ( params.Parameter_1 == "" ){
             echo 'Please entry the Parameter_1'
@@ -246,7 +211,7 @@ pipeline {
           
           // Get parameters from configure files
           def rootDir = pwd()
-          def props = readProperties  file:rootDir + "/parameters.conf"
+          def props = readProperties  file:rootDir + "/Unified_Jenkins/Jenkinsfile/Template/parameters.conf"
           def Training_lst_str= props['TRAINING_LIST']
 
           // Convert string to array
@@ -290,7 +255,7 @@ pipeline {
         script{
           // ### The Groovy script only run Jenkins master node ###
           def rootDir = pwd()
-          def external = load "${rootDir}/external.Groovy"
+          def external = load "${rootDir}/Unified_Jenkins/Jenkinsfile/Template/external.Groovy"
           external.verify_parameters(params.Parameter_1, params.Parameter_2)
         }
       }
@@ -324,12 +289,14 @@ pipeline {
   post {
     always {
       echo 'Print this message regardless of the completion status of the Pipeline run.'
+      emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) failed', body: ''' 
+      ALWAYS ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: env.maillist)
     }
     
     failure {
       echo 'Print this message if the current Pipeline is "failed" status'
       emailext(subject: 'Job \'${JOB_NAME}\' (${BUILD_NUMBER}) failed', body: ''' 
-      ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: 'shanghai.fu@nuance.com')
+      FAILURE ${JENKINS_URL}/blue/organizations/jenkins/${JOB_NAME}/detail/${JOB_NAME}/${BUILD_NUMBER}/pipeline''', attachLog: true, to: env.maillist)
     }
     
     success {
