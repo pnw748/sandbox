@@ -255,7 +255,7 @@ pipeline {
         script{
           // ### The Groovy script only run Jenkins master node ###
           def rootDir = pwd()
-          def external = load "${rootDir}/Unified_Jenkins/Jenkinsfile/Template/external.Groovy"
+          def external = load "${rootDir}/external.Groovy"
           external.verify_parameters(params.Parameter_1, params.Parameter_2)
         }
       }
