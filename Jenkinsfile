@@ -214,6 +214,11 @@ pipeline {
           def props = readProperties  file:rootDir + "/parameters.conf"
           def Training_lst_str= props['TRAINING_LIST']
 
+
+          String fileContents = new File(rootDir + "/training1.sh").text
+          println "FileContents:" + fileContents
+
+
           // Convert string to array
           def tmp_array = []
           def training_array=Training_lst_str.split(",")
