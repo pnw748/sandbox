@@ -234,6 +234,9 @@ pipeline {
                 def cmd = props[index]
                 sh "echo \"[INFO] Acctual command:\" ${cmd} "
                 sh "${cmd}"
+                sh "echo \"===============================\""
+                sh "${fileContents}"
+                sh "echo \"===============================\""
                 //build job: 'Training_dummy', parameters: [string(name: 'ASTRA_PATH', value: props[index])]
                 }
             }
