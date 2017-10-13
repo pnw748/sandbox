@@ -214,11 +214,6 @@ pipeline {
           def props = readProperties  file:rootDir + "/parameters.conf"
           def Training_lst_str= props['TRAINING_LIST']
 
-
-          String fileContents = new File(rootDir + "/training1.sh").text
-          println "FileContents:" + fileContents
-
-
           // Convert string to array
           def tmp_array = []
           def training_array=Training_lst_str.split(",")
@@ -232,8 +227,11 @@ pipeline {
             trainings[training_name] = {
               node('ASTRA-app-amrtools-solA') {
                 def cmd = props[index]
-                sh "echo \"[INFO] Acctual command:\" ${cmd} "
-                sh "${cmd}"
+
+                String fileContents = new File(rootDir + "/" + cmd).text
+                //println "FileContents:" + fileContents
+                //sh "echo \"[INFO] Acctual command:\" ${cmd} "
+                //sh "${cmd}"
                 sh "echo \"===============================\""
                 sh "${fileContents}"
                 sh "echo \"===============================\""
