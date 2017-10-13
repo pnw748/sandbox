@@ -225,7 +225,7 @@ pipeline {
           for(training_name in tmp_array){
             def index = training_name
             trainings[training_name] = {
-              node('master') {
+              node('ASTRA-app-amrtools-solA') {
                 def cmd = props[index]
                 sh "echo \"[INFO] Acctual command:\" ${cmd} "
                 sh "${cmd}"
