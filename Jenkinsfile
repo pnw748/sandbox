@@ -226,16 +226,9 @@ pipeline {
             def index = training_name
             trainings[training_name] = {
               node('ASTRA-app-amrtools-solA') {
-                def cmd = props[index]
-
-                String fileContents = new File(rootDir + "/" + cmd).text
-                //println "FileContents:" + fileContents
-                //sh "echo \"[INFO] Acctual command:\" ${cmd} "
-                //sh "${cmd}"
-                sh "echo \"===============================\""
-                sh "${fileContents}"
-                sh "echo \"===============================\""
-                //build job: 'Training_dummy', parameters: [string(name: 'ASTRA_PATH', value: props[index])]
+                def Commandfile = props[index]
+                String CommandContents = new File(rootDir + "/" + Commandfile).text
+                sh "${CommandContents}"
                 }
             }
           }
