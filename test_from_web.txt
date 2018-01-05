@@ -4,3 +4,5 @@ line3 in Eclipse
 line4 in zch49view01
 line5 from bahama_main branch
 line6
+line7
+line8
