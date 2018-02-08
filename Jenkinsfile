@@ -1,7 +1,7 @@
 pipeline {
   agent {
     node {
-      label 'unv-shanghai-fu.nrc1.us.grid.nuance.com'
+      label 'master'
     }
     
   }
